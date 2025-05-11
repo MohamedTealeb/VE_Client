@@ -39,10 +39,10 @@ function Navbar() {
           <ul className="flex space-x-6">
             <li>
               <a
-                href="/latest"
+                href="/product"
                 className="text-gray-700 hover:text-gray-900"
               >
-                Latest
+               Product
               </a>
             </li>
             <li>
