@@ -1,6 +1,6 @@
 
 import React from 'react';
-import logo from '../../assets/WhatsApp Image 2025-05-06 at 08.13.39_0895e5d0.jpg'
+import logo from '../../assets/WhatsApp Image 2025-05-10 at 23.43.31_0f57f908.jpg'
 function Navbar() {
   return (
     <div className="sticky top-0 z-10 bg-white shadow">
@@ -30,7 +30,7 @@ function Navbar() {
           <img
             src={logo}
             alt="logo"
-            className="h-8 md:h-10"
+            className="h-25 w-full "
           />
         </a>
 
