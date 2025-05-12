@@ -55,43 +55,48 @@ export default function Home() {
       </SwiperSlide>
     </Swiper>
     <div className="custom-pagination flex justify-center mt-4"></div>
-  <div className='mt-8 ml-30'>
-   <span className=' text-black font-bold text-2xl'>LASTEST DROPS</span>
-   <div className="grid grid-cols-4 gap-5">
-        {displayedItems.map((item) => (
-          <div key={item.id} className="text-center">
-            <img src={item.image} alt={item.name} className="w-full h-auto object-cover" />
-            <h3 className="text-lg mt-2.5 mb-1.25">{item.name}</h3>
-            <p className="text-base text-gray-700">{item.price}</p>
-          </div>
-        ))}
+ <div className="mt-8 px-4 sm:px-6 md:px-10">
+  <span className="text-black font-bold text-2xl block mb-4">LASTEST DROPS</span>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+    {displayedItems.map((item) => (
+      <div key={item.id} className="text-center">
+        <img
+          src={item.image}
+          alt={item.name}
+          className="w-full h-auto object-cover rounded"
+        />
+        <h3 className="text-lg mt-2.5 mb-1.25">{item.name}</h3>
+        <p className="text-base text-gray-700">{item.price}</p>
       </div>
-   <div className="flex justify-center items-center gap-2.5 mt-5">
-  <button
-    onClick={handlePrevPage}
-    disabled={currentPage === 1}
-    className="text-xl disabled:opacity-50 disabled:cursor-not-allowed"
-  >
-    &lt;
-  </button>
-  <span className="text-base">{currentPage}/{totalPages}</span>
-  <button
-    onClick={handleNextPage}
-    disabled={currentPage === totalPages}
-    className="text-xl disabled:opacity-50 disabled:cursor-not-allowed"
-  >
-    &gt;
-  </button>
-</div>
-
-<div className="flex justify-center mt-4 mb-6">
-  <button className="bg-black text-white px-5 py-2.5 text-base cursor-pointer">
-    VIEW ALL
-  </button>
-</div>
-
-
+    ))}
   </div>
+
+  <div className="flex justify-center items-center gap-2.5 mt-5">
+    <button
+      onClick={handlePrevPage}
+      disabled={currentPage === 1}
+      className="text-xl disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      &lt;
+    </button>
+    <span className="text-base">{currentPage}/{totalPages}</span>
+    <button
+      onClick={handleNextPage}
+      disabled={currentPage === totalPages}
+      className="text-xl disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      &gt;
+    </button>
+  </div>
+
+  <div className="flex justify-center mt-4 mb-6">
+    <button className="bg-black text-white px-5 py-2.5 text-base cursor-pointer">
+      VIEW ALL
+    </button>
+  </div>
+</div>
+
   <Footer />
       </>
 
