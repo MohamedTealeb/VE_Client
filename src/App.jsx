@@ -6,6 +6,7 @@ import Login from './Modules/Auth/Login/Login'
 import Home from "./Modules/Home/Home";
 import SignUp from "./Modules/Auth/Signup/SignUp";
 import Product from "./Modules/Product/Product";
+import Product_Det from "./Modules/Product/Product_Det";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       <Route path="home" element={<Home />} />
       <Route path="signup" element={<SignUp />} />
       <Route path="product" element={<Product />} />
+      <Route path="product_det" element={<Product_Det />} />
      </Routes>
     </>
   )
