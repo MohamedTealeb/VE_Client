@@ -6,7 +6,10 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
-  return (
+  return <>
+    <div class="bg-black text-white text-center py-2 text-sm font-semibold">
+  PURCHASE 2 ITEMS FOR 20% OFF
+</div>
     <div className=" top-0 z-10 bg-white shadow">
       <header className="relative flex items-center justify-between px-4 py-3 max-w-screen-xl mx-auto">
         {/* Mobile Menu Button */}
@@ -14,20 +17,20 @@ function Navbar() {
           <button
             className="focus:outline-none cursor-pointer"
             onClick={() => setMenuOpen(!menuOpen)}
-          >
+            >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-            >
+              >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
                 d="M4 6h16M4 12h16M4 18h16"
-              />
+                />
             </svg>
           </button>
         </div>
@@ -38,7 +41,7 @@ function Navbar() {
             src={logo}
             alt="logo"
             className="h-25 w-full"
-          />
+            />
         </a>
 
         {/* Desktop Navigation */}
@@ -47,7 +50,7 @@ function Navbar() {
             <li><a href="/product" className="text-gray-700 hover:text-gray-900">Product</a></li>
             <li><a href="/sale" className="text-gray-700 hover:text-gray-900">Sale</a></li>
             <li><a href="/about" className="text-gray-700 hover:text-gray-900">About</a></li>
-            <li><a href="/reviews" className="text-gray-700 hover:text-gray-900">Reviews</a></li>
+            <li><a href="/category" className="text-gray-700 hover:text-gray-900">Category</a></li>
           </ul>
         </nav>
 
@@ -57,7 +60,7 @@ function Navbar() {
           <button
             className="cursor-pointer focus:outline-none"
             onClick={() => setShowSearch(!showSearch)}
-          >
+            >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-6a7 7 0 10-14 0 7 7 0 0014 0z" />
             </svg>
@@ -79,7 +82,7 @@ function Navbar() {
             type="text"
             placeholder="Search..."
             className="w-full max-w-md border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
-          />
+            />
         </div>
       )}
 
@@ -95,7 +98,8 @@ function Navbar() {
         </div>
       )}
     </div>
-  );
+      </>
+  
 }
 
 export default Navbar;
