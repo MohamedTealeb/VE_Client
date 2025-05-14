@@ -6,7 +6,7 @@ const allProducts = [
   {
     id: 1,
     title: "CASUAL BLUE T-SHIRT",
-    image: banner, // استبدل برابط صورة قميص أزرق
+    image: banner,
     price: 1022,
     originalPrice: 2047,
     status: "On Sale",
@@ -14,7 +14,7 @@ const allProducts = [
   {
     id: 2,
     title: "BLACK HOODIE",
-    image: banner, // استبدل برابط صورة هودي أسود
+    image: banner, 
     price: 1022,
     originalPrice: 2047,
     status: "Sold out",
@@ -22,7 +22,7 @@ const allProducts = [
   {
     id: 3,
     title: "WHITE SNEAKERS",
-    image: "https://example.com/images/white-sneakers.png", // استبدل برابط صورة حذاء رياضي أبيض
+    image: "https://example.com/images/white-sneakers.png", 
     price: 1022,
     originalPrice: 2047,
     status: "On Sale",
@@ -30,7 +30,7 @@ const allProducts = [
   {
     id: 4,
     title: "DENIM JACKET",
-    image: "https://example.com/images/denim-jacket.png", // استبدل برابط صورة جاكيت جينز
+    image: "https://example.com/images/denim-jacket.png", 
     price: 1022,
     originalPrice: 2047,
     status: "On Sale",
@@ -38,7 +38,7 @@ const allProducts = [
   {
     id: 5,
     title: "RED CAP",
-    image: "https://example.com/images/red-cap.png", // استبدل برابط صورة قبعة حمراء
+    image: "https://example.com/images/red-cap.png", 
     price: 254,
     originalPrice: null,
     status: null,
@@ -46,7 +46,7 @@ const allProducts = [
   {
     id: 6,
     title: "GREEN JOGGERS",
-    image: "https://example.com/images/green-joggers.png", // استبدل برابط صورة بنطلون رياضي أخضر
+    image: "https://example.com/images/green-joggers.png",
     price: 1022,
     originalPrice: 2047,
     status: "On Sale",
@@ -54,7 +54,7 @@ const allProducts = [
   {
     id: 7,
     title: "FLORAL DRESS",
-    image: "https://example.com/images/floral-dress.png", // استبدل برابط صورة فستان زهور
+    image: "https://example.com/images/floral-dress.png", 
     price: 1022,
     originalPrice: 2047,
     status: "On Sale",
@@ -62,7 +62,7 @@ const allProducts = [
   {
     id: 8,
     title: "STRIPED SHIRT",
-    image: "https://example.com/images/striped-shirt.png", // استبدل برابط صورة قميص مخطط
+    image: "https://example.com/images/striped-shirt.png",
     price: 1022,
     originalPrice: 1842,
     status: "Sold out",
@@ -70,7 +70,7 @@ const allProducts = [
   {
     id: 7,
     title: "FLORAL DRESS",
-    image: "https://example.com/images/floral-dress.png", // استبدل برابط صورة فستان زهور
+    image: "https://example.com/images/floral-dress.png", 
     price: 1022,
     originalPrice: 2047,
     status: "On Sale",
@@ -78,7 +78,7 @@ const allProducts = [
   {
     id: 8,
     title: "STRIPED SHIRT",
-    image: "https://example.com/images/striped-shirt.png", // استبدل برابط صورة قميص مخطط
+    image: "https://example.com/images/striped-shirt.png", 
     price: 1022,
     originalPrice: 1842,
     status: "Sold out",

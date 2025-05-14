@@ -53,7 +53,7 @@ function Navbar() {
             <li><a href="/category" className="text-gray-700 hover:text-gray-900">Category</a></li>
           </ul>
         </nav>
-
+ 
         {/* Icons */}
         <div className="flex items-center space-x-4">
           {/* Search Icon */}
