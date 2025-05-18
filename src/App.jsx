@@ -9,6 +9,7 @@ import Product from "./Modules/Product/Product";
 import Product_Det from "./Modules/Product/Product_Det";
 import Cart from "./Modules/Cart/Cart";
 import Sale from "./Modules/Sale/Sale";
+import Offline from "./Modules/Offline/Offline";
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
       <Route path="product_det" element={<Product_Det />} />
       <Route path="cart" element={<Cart />}/>
       <Route path="sale" element={<Sale />}/>
+        <Route path="*" element={<Offline />} />
      </Routes>
     </>
   )
