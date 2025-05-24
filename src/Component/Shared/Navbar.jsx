@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import logo from '../../assets/WhatsApp Image 2025-05-10 at 23.43.31_0f57f908.jpg';
 
@@ -7,7 +6,7 @@ function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
 
   return <>
-    <div class="bg-black text-white text-center py-2 text-sm font-semibold">
+    <div className="bg-black text-white text-center py-2 text-sm font-semibold">
   PURCHASE 2 ITEMS FOR 20% OFF
 </div>
     <div className=" top-0 z-10 bg-white shadow">
@@ -36,7 +35,7 @@ function Navbar() {
         </div>
 
         {/* Logo (unchanged) */}
-        <a href="home" className="flex-shrink-0">
+        <a href="/home" className="flex-shrink-0">
           <img
             src={logo}
             alt="logo"

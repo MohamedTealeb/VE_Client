@@ -1,50 +1,132 @@
-import React from 'react'
-import logo from '../../../assets/WhatsApp Image 2025-05-06 at 08.13.39_0895e5d0.jpg'
-import { Link } from 'react-router'
+import React, { useState } from 'react';
+import logo from '../../../assets/WhatsApp Image 2025-05-06 at 12.31.39_3f99cae6.jpg';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import toast, { Toaster } from 'react-hot-toast';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+
+import { loginUser } from '../../../Apis/Auth/Login/Login_Api';
+
 export default function Login() {
-  return <>
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [showPassword, setShowPassword] = useState(false);
 
- 
-<div class="h-screen font-sans bg-center bg-no-repeat bg-cover" style={{ backgroundImage: `url(${logo})`, backgroundSize: 'cover' }}>
-  <div class="container mx-auto h-full flex flex-1 justify-center items-center">
-    <div class="w-full max-w-lg">
-      <div class="leading-loose">
-        <form className="max-w-sm m-4 p-10 bg-transparent rounded shadow-xl ml-16">
-          <p class="text-black text-center text-lg font-bold">LOGIN</p>
+  const { loading, error } = useSelector((state) => state.auth);
 
-          <div>
-            <label class="block text-sm text-black" htmlFor="email">Email</label>
-            <input class="w-full px-5 py-1 text-gray-700 bg-gray-300 rounded focus:outline-none focus:bg-white"
-              type="email" id="email" placeholder="Enter your email" aria-label="email" required />
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      console.log("Submitting login form...");
+      const result = await dispatch(loginUser({ email: data.username, password: data.password })).unwrap();
+      
+      // Check if token exists in localStorage
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error("No token found in localStorage after login");
+        toast.error("Login failed - no token received");
+        return;
+      }
+
+      toast.success('Logged in successfully!', { duration: 5000 });
+      console.log("Navigating to /home...");
+      navigate('/home');
+    } catch (err) {
+      console.error("Login error in component:", err);
+      toast.error(err.message || 'Login failed');
+    }
+  };
+
+  const clearErrorToast = () => {
+    toast.dismiss();
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  return (
+    <>
+      <Toaster />
+      <div className="flex flex-col lg:flex-row h-screen bg-[#050608]">
+        <div className="w-full lg:w-1/2 h-screen">
+          <img
+            src={logo}
+            alt="Background"
+            className="object-cover w-full h-full"
+          />
+        </div>
+
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-36">
+          <div className="w-full max-w-md text-white">
+            <h1 className="text-2xl font-semibold mb-4">Login</h1>
+
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label htmlFor="username" className="block text-white">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="username"
+                  name="username"
+                  required
+                  className="w-full border border-black text-black rounded-md bg-white py-2 px-3"
+                  autoComplete="off"
+                  onChange={clearErrorToast}
+                />
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="password" className="block text-white">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    id="password"
+                    name="password"
+                    required
+                    className="w-full border border-black text-black rounded-md bg-white py-2 px-3 pr-10"
+                    onChange={clearErrorToast}
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleShowPassword}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-gray-900 focus:outline-none"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="mb-4 flex justify-between items-center">
+                <Link to="/forgot-password" className="text-sm text-white hover:text-gray-300">
+                  Forgot Password?
+                </Link>
+                <Link to="/signup" className="text-sm text-white hover:text-gray-300">
+                  Don't have an account? 
+                </Link>
+              </div>
+
+              <div className="mt-6">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full cursor-pointer px-4 py-1 text-white font-bold tracking-wider bg-black hover:bg-white hover:text-black rounded"
+                >
+                  {loading ? 'Logging in...' : 'Login'}
+                </button>
+              </div>
+            </form>
           </div>
-
-          <div class="mt-2">
-            <label class="block text-sm text-black" htmlFor="password">Password</label>
-            <input class="w-full px-5 py-1 text-gray-700 bg-gray-300 rounded focus:outline-none focus:bg-white"
-              type="password" id="password" placeholder="Enter your password" aria-label="password" required />
-          </div>
-
-          <div class="mt-4 items-center flex justify-between">
-            <Link to={'/home'}>
-              <button class="cursor-pointer px-4 py-1 text-white font-bold tracking-wider bg-black hover:bg-white hover:text-black rounded"
-                type="submit">Login</button>
-            </Link>
-            <a class="inline-block right-0 align-baseline font-bold text-sm text-white hover:text-red-400" href="#">
-              Forgot Password?
-            </a>
-          </div>
-
-          <div class="text-center">
-            <a class="inline-block right-0 align-baseline font-light text-sm hover:text-red-400" href="signup">
-              Create an Account
-            </a>
-          </div>
-
-        </form>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
-
     </>
-   }
+  );
+}

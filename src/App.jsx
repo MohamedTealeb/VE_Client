@@ -1,38 +1,77 @@
-import React  from "react";
-
-import { Route, Routes } from 'react-router'
-
-import Login from './Modules/Auth/Login/Login'
+import React from "react";
+import { Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Home from "./Modules/Home/Home";
-import SignUp from "./Modules/Auth/Signup/SignUp";
 import Product from "./Modules/Product/Product";
-import Product_Det from "./Modules/Product/Product_Det";
+import Login from "./Modules/Auth/Login/Login";
+import SignUp from "./Modules/Auth/Signup/SignUp";
+import ForgotPassword from "./Modules/Auth/ForgotPassword/ForgotPassword";
 import Cart from "./Modules/Cart/Cart";
-import Sale from "./Modules/Sale/Sale";
-import Offline from "./Modules/Offline/Offline";
-import About from "./Modules/About/About";
-
+import Category from "./Modules/Category/Category";
+import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
+import { Toaster } from "react-hot-toast";
 
 function App() {
-  
+  const location = useLocation();
+  const isAuthPage = location.pathname === "/login" || location.pathname === "/signup" || location.pathname === "/forgot-password";
 
   return (
     <>
-     <Routes>
+      <Toaster />
+      <div>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
-      <Route path="/" element={<Login />} />
-      <Route path="login" element={<Login />} />
-      <Route path="home" element={<Home />} />
-      <Route path="signup" element={<SignUp />} />
-      <Route path="product" element={<Product />} />
-      <Route path="product_det" element={<Product_Det />} />
-      <Route path="cart" element={<Cart />}/>
-      <Route path="sale" element={<Sale />}/>
-      <Route path="about" element={<About />}/>
-        <Route path="*" element={<Offline />} />
-     </Routes>
+          {/* Protected Routes */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/product"
+            element={
+              <ProtectedRoute>
+                <Product />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/category"
+            element={
+              <ProtectedRoute>
+                <Category />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Redirect any unknown routes to login */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
