@@ -7,8 +7,11 @@ import SignUp from "./Modules/Auth/Signup/SignUp";
 import ForgotPassword from "./Modules/Auth/ForgotPassword/ForgotPassword";
 import Cart from "./Modules/Cart/Cart";
 import Category from "./Modules/Category/Category";
-import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
+import ProtectedRoute from "./Component/Shared/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
+import About from "./Modules/About/About";
+import { AuthProvider } from "./Context/AuthContext";
+import SalePage from "./Modules/Sale/Sale";
 
 function App() {
   const location = useLocation();
@@ -16,47 +19,27 @@ function App() {
 
   return (
     <>
+    <AuthProvider>
+
       <Toaster />
       <div>
         <Routes>
-          {/* Public Routes */}
+          {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          {/* Protected Routes */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/product"
-            element={
-              <ProtectedRoute>
-                <Product />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/category"
-            element={
-              <ProtectedRoute>
-                <Category />
-              </ProtectedRoute>
-            }
-          />
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/sale" element={<SalePage />} />
+          <Route path="/about" element={<About />} />
+        
+          <Route path="/category" element={<Category />} />
+
+          {/* Protected Cart Route */}
           <Route
             path="/cart"
             element={
@@ -66,10 +49,11 @@ function App() {
             }
           />
 
-          {/* Redirect any unknown routes to login */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          {/* Redirect any unknown routes to home */}
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </div>
+    </AuthProvider>
     </>
   );
 }

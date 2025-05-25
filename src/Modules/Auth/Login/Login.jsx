@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useAuth } from '../../../Context/AuthContext';
 
 import { loginUser } from '../../../Apis/Auth/Login/Login_Api';
 
@@ -12,32 +13,27 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login } = useAuth();
 
   const { loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-
     try {
-      console.log("Submitting login form...");
-      const result = await dispatch(loginUser({ email: data.username, password: data.password })).unwrap();
-      
-      // Check if token exists in localStorage
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.error("No token found in localStorage after login");
-        toast.error("Login failed - no token received");
-        return;
-      }
-
-      toast.success('Logged in successfully!', { duration: 5000 });
-      console.log("Navigating to /home...");
+      // Here you would typically make an API call to your backend
+      // For now, we'll simulate a successful login
+      const userData = {
+        email,
+        // Add any other user data you want to store
+      };
+      login(userData);
+      toast.success('Logged in successfully!');
       navigate('/home');
-    } catch (err) {
-      console.error("Login error in component:", err);
-      toast.error(err.message || 'Login failed');
+    } catch (error) {
+      console.error('Login failed:', error);
+      toast.error('Login failed. Please try again.');
     }
   };
 
@@ -67,17 +63,19 @@ export default function Login() {
 
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label htmlFor="username" className="block text-white">
+                <label htmlFor="email" className="block text-white">
                   Email
                 </label>
                 <input
                   type="email"
-                  id="username"
-                  name="username"
+                  id="email"
+                  name="email"
                   required
                   className="w-full border border-black text-black rounded-md bg-white py-2 px-3"
                   autoComplete="off"
-                  onChange={clearErrorToast}
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
 
@@ -92,7 +90,9 @@ export default function Login() {
                     name="password"
                     required
                     className="w-full border border-black text-black rounded-md bg-white py-2 px-3 pr-10"
-                    onChange={clearErrorToast}
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                   <button
                     type="button"
