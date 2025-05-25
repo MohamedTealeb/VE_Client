@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '../../assets/WhatsApp Image 2025-05-10 at 23.43.31_0f57f908.jpg';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../Context/AuthContext'; // Import your auth context
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileMenu, setProfileMenu] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth(); // Get the user from your auth context
+
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem('token'));
+    // Listen for login/logout events from other tabs
+    const onStorage = () => setIsLoggedIn(!!localStorage.getItem('token'));
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setProfileMenu(false);
+    navigate('/login');
+  };
 
   return <>
     <div className="bg-black text-white text-center py-2 text-sm font-semibold">
@@ -77,15 +92,40 @@ function Navbar() {
           </a>
 
           {/* Login Button or Profile Icon */}
-          {user ? (
-            <a href="/profile" className="relative inline-block focus:outline-none group">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-700 group-hover:text-gray-900 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                My Profile
-              </span>
-            </a>
+          {isLoggedIn ? (
+            <div className="relative">
+              <button
+                className="relative inline-block focus:outline-none group"
+                onClick={() => setProfileMenu((prev) => !prev)}
+                onBlur={() => setTimeout(() => setProfileMenu(false), 150)}
+              >
+                {/* Profile SVG */}
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-700 group-hover:text-gray-900 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  My Profile
+                </span>
+              </button>
+              {/* Dropdown menu */}
+              {profileMenu && (
+                <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-lg z-20">
+                  <a
+                    href="/profile"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => setProfileMenu(false)}
+                  >
+                    Profile
+                  </a>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <button 
               onClick={() => navigate('/login')}
@@ -116,7 +156,7 @@ function Navbar() {
             <li><a href="/sale" className="block text-gray-700 hover:text-gray-900">Sale</a></li>
             <li><a href="/about" className="block text-gray-700 hover:text-gray-900">About</a></li>
             <li><a href="/reviews" className="block text-gray-700 hover:text-gray-900">Reviews</a></li>
-            {user ? (
+            {isLoggedIn ? (
               <li><a href="/profile" className="block text-gray-700 hover:text-gray-900">My Profile</a></li>
             ) : (
               <li><a href="/login" className="block text-gray-700 hover:text-gray-900">Login</a></li>

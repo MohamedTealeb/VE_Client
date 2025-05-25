@@ -4,8 +4,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useAuth } from '../../../Context/AuthContext';
-
 import { loginUser } from '../../../Apis/Auth/Login/Login_Api';
 
 export default function Login() {
@@ -15,25 +13,17 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
 
   const { loading, error } = useSelector((state) => state.auth);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Here you would typically make an API call to your backend
-      // For now, we'll simulate a successful login
-      const userData = {
-        email,
-        // Add any other user data you want to store
-      };
-      login(userData);
+      const resultAction = await dispatch(loginUser({ email, password })).unwrap();
       toast.success('Logged in successfully!');
       navigate('/home');
-    } catch (error) {
-      console.error('Login failed:', error);
-      toast.error('Login failed. Please try again.');
+    } catch (err) {
+      toast.error(err.message || 'Login failed');
     }
   };
 

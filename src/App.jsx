@@ -10,7 +10,7 @@ import Category from "./Modules/Category/Category";
 import ProtectedRoute from "./Component/Shared/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
 import About from "./Modules/About/About";
-import { AuthProvider } from "./Context/AuthContext";
+
 import SalePage from "./Modules/Sale/Sale";
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
 
   return (
     <>
-    <AuthProvider>
+    
 
       <Toaster />
       <div>
@@ -53,7 +53,7 @@ function App() {
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </div>
-    </AuthProvider>
+
     </>
   );
 }
