@@ -5,19 +5,171 @@ export default function Product() {
   return (
     <>
       <Navbar />
-      <div className="pt-32 bg-white">
-        <h1 className="text-center text-2xl font-bold text-gray-800">All Products</h1>
+      {/* Hero Section with Enhanced Animation */}
+      <div className="relative bg-black py-20 overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0">
+          {/* Animated gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-black animate-gradient"></div>
+          
+          {/* Animated particles */}
+          <div className="absolute inset-0">
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-white rounded-full animate-particle"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 5}s`,
+                  opacity: Math.random() * 0.5 + 0.2
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Enhanced blob animations */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+            <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+            <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+          </div>
+
+          {/* Animated lines */}
+          <div className="absolute inset-0">
+            {[...Array(5)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute h-px bg-gradient-to-r from-transparent via-white/30 to-transparent animate-line"
+                style={{
+                  top: `${20 + i * 15}%`,
+                  width: '100%',
+                  animationDelay: `${i * 0.5}s`
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl animate-fade-in">
+              <span className="block animate-slide-up" style={{ animationDelay: '0.2s' }}>Discover Our</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-gradient-x animate-pulse-slow">Premium Products</span>
+            </h1>
+            <p className="mt-3 max-w-md mx-auto text-base text-gray-300 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl animate-slide-up" style={{ animationDelay: '0.4s' }}>
+              Explore our collection of premium products
+            </p>
+          </div>
+        </div>
       </div>
 
-     
+      {/* Filters Section */}
+      <div className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center space-x-4">
+              <select className="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+                <option>All Categories</option>
+                <option>Electronics</option>
+                <option>Clothing</option>
+                <option>Accessories</option>
+              </select>
+              <select className="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+                <option>Price Range</option>
+                <option>Under $100</option>
+                <option>$100 - $500</option>
+                <option>Over $500</option>
+              </select>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span className="text-gray-500">Sort by:</span>
+              <select className="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+                <option>Featured</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+                <option>Newest</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Product Grid */}
-      <section className="py-10 bg-gray-100">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {products.map((product, index) => (
-            <ProductCard key={index} {...product} />
-          ))}
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+            {products.map((product, index) => (
+              <ProductCard key={index} {...product} />
+            ))}
+          </div>
         </div>
       </section>
+
+      {/* Enhanced custom styles for animations */}
+      <style jsx>{`
+        @keyframes gradient {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes blob {
+          0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+          33% { transform: translate(30px, -50px) scale(1.1) rotate(120deg); }
+          66% { transform: translate(-20px, 20px) scale(0.9) rotate(240deg); }
+          100% { transform: translate(0px, 0px) scale(1) rotate(360deg); }
+        }
+        @keyframes particle {
+          0% { transform: translateY(0) translateX(0); opacity: 0; }
+          50% { opacity: 1; }
+          100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+        }
+        @keyframes line {
+          0% { transform: translateX(-100%); opacity: 0; }
+          50% { opacity: 1; }
+          100% { transform: translateX(100%); opacity: 0; }
+        }
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(-20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slide-up {
+          from { transform: translateY(20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.8; }
+        }
+        .animate-gradient {
+          background-size: 200% 200%;
+          animation: gradient 15s ease infinite;
+        }
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        .animate-particle {
+          animation: particle 3s infinite;
+        }
+        .animate-line {
+          animation: line 3s infinite;
+        }
+        .animate-fade-in {
+          animation: fade-in 1s ease-out;
+        }
+        .animate-slide-up {
+          animation: slide-up 1s ease-out;
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow 3s infinite;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+      `}</style>
     </>
   );
 }
@@ -60,44 +212,59 @@ function CompassIcon() {
 // Product Card Component
 function ProductCard({ title, location, price, image, rating }) {
   return (
-    <article className="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300">
-      <a href="#">
-        <div className="relative flex items-end overflow-hidden rounded-xl">
-          <img src={image} alt={title} />
-          {rating ? (
-            <div className="absolute bottom-3 left-3 inline-flex items-center rounded-lg bg-white p-2 shadow-md">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <span className="ml-1 text-sm text-slate-400">{rating}</span>
-            </div>
-          ) : (
-            <AddToCartButton />
-          )}
-        </div>
-
-        <div className="mt-1 p-2">
-          <h2 className="text-slate-700">{title}</h2>
-          <p className="mt-1 text-sm text-slate-400">{location}</p>
-
-          <div className="mt-3 flex items-end justify-between">
-            <p className="text-lg font-bold text-blue-500">${price}</p>
-            <AddToCartButton />
+    <div className="group relative bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300">
+      <div className="relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-gray-200">
+        {/* Image Container with Hover Effects */}
+        <div className="relative h-64 w-full overflow-hidden">
+          <img
+            src={image}
+            alt={title}
+            className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-2"
+          />
+          {/* Overlay with gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          
+          {/* Quick View Button */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button className="transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white/90 hover:bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium shadow-lg">
+              Quick View
+            </button>
           </div>
         </div>
-      </a>
-    </article>
-  );
-}
 
-// Add to Cart Button Component
-function AddToCartButton() {
-  return (
-    <div className="flex items-center space-x-1.5 rounded-lg bg-blue-500 px-4 py-1.5 text-white duration-100 hover:bg-blue-600">
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-      </svg>
-      <button className="text-sm">Add to cart</button>
+        {/* Rating Badge */}
+        {rating && (
+          <div className="absolute top-4 right-4 transform translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
+            <div className="flex items-center bg-yellow-100 px-2 py-1 rounded-full shadow-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <span className="ml-1 text-sm font-medium text-yellow-800">{rating}</span>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      <div className="p-4">
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-lg font-medium text-gray-900 group-hover:text-purple-600 transition-colors duration-300">
+              {title}
+            </h3>
+            <p className="mt-1 text-sm text-gray-500">{location}</p>
+          </div>
+        </div>
+
+        <div className="mt-4 flex items-center justify-between">
+          <p className="text-lg font-bold text-gray-900">${price}</p>
+          <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 transform hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            Add to Cart
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
