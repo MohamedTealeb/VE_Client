@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import logo from '../../assets/WhatsApp Image 2025-05-10 at 23.43.31_0f57f908.jpg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 function Navbar() {
@@ -22,7 +22,6 @@ function Navbar() {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
     setProfileMenu(false);
-    navigate('/login');
   };
 
   return <>

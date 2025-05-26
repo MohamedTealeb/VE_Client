@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import banner from '../../assets/WhatsApp Image 2025-05-10 at 23.43.31_0f57f908.jpg'
 import Navbar from "../../Component/Shared/Navbar";
 import Footer from '../../Component/Shared/Footer';
+import './Sale.css';
 
 const allProducts = [
   {
@@ -104,14 +105,14 @@ export default function Sale() {
                 {/* Animated background elements */}
                 <div className="absolute inset-0">
                     {/* Animated gradient background */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-red-900 via-black to-red-900 animate-gradient"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-red-900 via-yellow-900 to-red-900 animate-gradient"></div>
                     
                     {/* Animated particles */}
                     <div className="absolute inset-0">
                         {[...Array(20)].map((_, i) => (
                             <div
                                 key={i}
-                                className="absolute w-2 h-2 bg-red-500 rounded-full animate-particle"
+                                className="absolute w-2 h-2 bg-red-400 rounded-full animate-particle"
                                 style={{
                                     left: `${Math.random() * 100}%`,
                                     top: `${Math.random() * 100}%`,
@@ -134,7 +135,7 @@ export default function Sale() {
                         {[...Array(5)].map((_, i) => (
                             <div
                                 key={i}
-                                className="absolute h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent animate-line"
+                                className="absolute h-px bg-gradient-to-r from-transparent via-red-400/30 to-transparent animate-line"
                                 style={{
                                     top: `${20 + i * 15}%`,
                                     width: '100%',
@@ -152,7 +153,7 @@ export default function Sale() {
                             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-yellow-500 to-red-500 animate-gradient-x animate-pulse-slow">Up to 70% Off</span>
                         </h1>
                         <p className="mt-3 max-w-md mx-auto text-base text-gray-300 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl animate-slide-up" style={{ animationDelay: '0.4s' }}>
-                            Limited time deals on our best-selling products
+                            Limited time deals on our most popular products
                         </p>
                     </div>
                 </div>
@@ -220,71 +221,6 @@ export default function Sale() {
             </section>
 
             <Footer />
-
-            {/* Enhanced custom styles for animations */}
-            <style jsx>{`
-                @keyframes gradient {
-                    0% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                    100% { background-position: 0% 50%; }
-                }
-                @keyframes blob {
-                    0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
-                    33% { transform: translate(30px, -50px) scale(1.1) rotate(120deg); }
-                    66% { transform: translate(-20px, 20px) scale(0.9) rotate(240deg); }
-                    100% { transform: translate(0px, 0px) scale(1) rotate(360deg); }
-                }
-                @keyframes particle {
-                    0% { transform: translateY(0) translateX(0); opacity: 0; }
-                    50% { opacity: 1; }
-                    100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
-                }
-                @keyframes line {
-                    0% { transform: translateX(-100%); opacity: 0; }
-                    50% { opacity: 1; }
-                    100% { transform: translateX(100%); opacity: 0; }
-                }
-                @keyframes fade-in {
-                    from { opacity: 0; transform: translateY(-20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                @keyframes slide-up {
-                    from { transform: translateY(20px); opacity: 0; }
-                    to { transform: translateY(0); opacity: 1; }
-                }
-                @keyframes pulse-slow {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.8; }
-                }
-                .animate-gradient {
-                    background-size: 200% 200%;
-                    animation: gradient 15s ease infinite;
-                }
-                .animate-blob {
-                    animation: blob 7s infinite;
-                }
-                .animate-particle {
-                    animation: particle 3s infinite;
-                }
-                .animate-line {
-                    animation: line 3s infinite;
-                }
-                .animate-fade-in {
-                    animation: fade-in 1s ease-out;
-                }
-                .animate-slide-up {
-                    animation: slide-up 1s ease-out;
-                }
-                .animate-pulse-slow {
-                    animation: pulse-slow 3s infinite;
-                }
-                .animation-delay-2000 {
-                    animation-delay: 2s;
-                }
-                .animation-delay-4000 {
-                    animation-delay: 4s;
-                }
-            `}</style>
         </div>
     );
 }

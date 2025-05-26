@@ -2,6 +2,7 @@ import React from 'react'
 import logo from '../../assets/WhatsApp Image 2025-05-06 at 08.13.39_0895e5d0.jpg'
 import Navbar from '../../Component/Shared/Navbar'
 import Footer from '../../Component/Shared/Footer'
+import './About.css'
 
 export default function About() {
   return (
@@ -168,71 +169,6 @@ export default function About() {
       </div>
 
       <Footer />
-
-      {/* Enhanced custom styles for animations */}
-      <style jsx>{`
-        @keyframes gradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
-          33% { transform: translate(30px, -50px) scale(1.1) rotate(120deg); }
-          66% { transform: translate(-20px, 20px) scale(0.9) rotate(240deg); }
-          100% { transform: translate(0px, 0px) scale(1) rotate(360deg); }
-        }
-        @keyframes particle {
-          0% { transform: translateY(0) translateX(0); opacity: 0; }
-          50% { opacity: 1; }
-          100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
-        }
-        @keyframes line {
-          0% { transform: translateX(-100%); opacity: 0; }
-          50% { opacity: 1; }
-          100% { transform: translateX(100%); opacity: 0; }
-        }
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(-20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slide-up {
-          from { transform: translateY(20px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.8; }
-        }
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradient 15s ease infinite;
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animate-particle {
-          animation: particle 3s infinite;
-        }
-        .animate-line {
-          animation: line 3s infinite;
-        }
-        .animate-fade-in {
-          animation: fade-in 1s ease-out;
-        }
-        .animate-slide-up {
-          animation: slide-up 1s ease-out;
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 3s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
     </div>
   )
 }
