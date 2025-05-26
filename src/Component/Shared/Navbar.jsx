@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import logo from '../../assets/WhatsApp Image 2025-05-10 at 23.43.31_0f57f908.jpg';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../Context/AuthContext'; // Import your auth context
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [profileMenu, setProfileMenu] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
