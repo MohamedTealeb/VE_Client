@@ -5,10 +5,12 @@ export const fetchCategories = createAsyncThunk(
   "category/fetchCategories",
   async (_, { rejectWithValue }) => {
     try {
-      // Replace with your real API endpoint
+      console.log('Fetching categories from:', `${import.meta.env.VITE_BASEURL}/categories`);
       const response = await axios.get(`${import.meta.env.VITE_BASEURL}/categories`);
+      console.log('Categories API Response:', response.data);
       return response.data;
     } catch (error) {
+      console.error('Categories API Error:', error);
       return rejectWithValue(error.response?.data?.message || "Failed to fetch categories");
     }
   }
