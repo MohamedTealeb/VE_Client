@@ -1,10 +1,12 @@
 import React from 'react';
 import Navbar from '../../Component/Shared/Navbar';
+import Footer from '../../Component/Shared/Footer';
 
 export default function Product() {
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
       <Navbar />
+      
       {/* Hero Section with Enhanced Animation */}
       <div className="relative bg-black py-20 overflow-hidden">
         {/* Animated background elements */}
@@ -64,18 +66,37 @@ export default function Product() {
         </div>
       </div>
 
+      {/* Stats Section */}
+      <div className="bg-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { label: 'Total Products', value: '1,234' },
+              { label: 'Happy Customers', value: '98%' },
+              { label: 'Global Shipping', value: '24/7' },
+              { label: 'Support', value: '24/7' }
+            ].map((stat, index) => (
+              <div key={index} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+                <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                <p className="mt-2 text-sm text-gray-600">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Filters Section */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center space-x-4">
-              <select className="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+              <select className="rounded-lg border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm">
                 <option>All Categories</option>
                 <option>Electronics</option>
                 <option>Clothing</option>
                 <option>Accessories</option>
               </select>
-              <select className="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+              <select className="rounded-lg border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm">
                 <option>Price Range</option>
                 <option>Under $100</option>
                 <option>$100 - $500</option>
@@ -84,7 +105,7 @@ export default function Product() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-gray-500">Sort by:</span>
-              <select className="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+              <select className="rounded-lg border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm">
                 <option>Featured</option>
                 <option>Price: Low to High</option>
                 <option>Price: High to Low</option>
@@ -96,7 +117,7 @@ export default function Product() {
       </div>
 
       {/* Product Grid */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
             {products.map((product, index) => (
@@ -105,6 +126,9 @@ export default function Product() {
           </div>
         </div>
       </section>
+
+   
+      <Footer />
 
       {/* Enhanced custom styles for animations */}
       <style jsx>{`
@@ -170,7 +194,7 @@ export default function Product() {
           animation-delay: 4s;
         }
       `}</style>
-    </>
+    </div>
   );
 }
 
@@ -212,8 +236,8 @@ function CompassIcon() {
 // Product Card Component
 function ProductCard({ title, location, price, image, rating }) {
   return (
-    <div className="group relative bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-300">
-      <div className="relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-gray-200">
+    <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
+      <div className="relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-xl bg-gray-200">
         {/* Image Container with Hover Effects */}
         <div className="relative h-64 w-full overflow-hidden">
           <img
@@ -257,7 +281,7 @@ function ProductCard({ title, location, price, image, rating }) {
 
         <div className="mt-4 flex items-center justify-between">
           <p className="text-lg font-bold text-gray-900">${price}</p>
-          <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 transform hover:scale-105">
+          <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 transform hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
