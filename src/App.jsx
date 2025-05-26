@@ -12,6 +12,7 @@ import { Toaster } from "react-hot-toast";
 import About from "./Modules/About/About";
 
 import SalePage from "./Modules/Sale/Sale";
+import Product_Det from "./Modules/Product/Product_Det";
 
 function App() {
   const location = useLocation();
@@ -34,6 +35,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/product" element={<Product />} />
+          <Route path="/product_det" element={<Product_Det />} />
           <Route path="/sale" element={<SalePage />} />
           <Route path="/about" element={<About />} />
         
