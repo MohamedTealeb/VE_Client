@@ -203,7 +203,7 @@ export default function Sale() {
                                 <option>Price: Low to High</option>
                                 <option>Price: High to Low</option>
                                 <option>Newest</option>
-                            </select>
+                    </select>
                         </div>
                     </div>
                 </div>
@@ -216,12 +216,12 @@ export default function Sale() {
                         {currentProducts.map((product, index) => (
                             <SaleProductCard key={index} {...product} />
                         ))}
-                    </div>
-                </div>
+                            </div>
+                        </div>
             </section>
 
             <Footer />
-        </div>
+                            </div>
     );
 }
 
@@ -254,7 +254,7 @@ function SaleProductCard({ title, image, price, originalPrice, status }) {
                     </div>
                 </div>
             </div>
-            
+
             <div className="p-4">
                 <div className="flex justify-between items-start">
                     <div>

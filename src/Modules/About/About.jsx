@@ -72,21 +72,21 @@ export default function About() {
       <div className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            {/* Text Section */}
+        {/* Text Section */}
             <div className="space-y-8">
               <div className="space-y-4">
                 <h2 className="text-3xl font-bold text-gray-900 animate-fade-in">Who We Are</h2>
                 <p className="text-lg text-gray-600 leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
-                  We are a passionate team of designers and developers dedicated to creating outstanding digital experiences.
-                  Our mission is to deliver innovative, reliable, and user-friendly solutions that make a real impact.
-                </p>
+            We are a passionate team of designers and developers dedicated to creating outstanding digital experiences.
+            Our mission is to deliver innovative, reliable, and user-friendly solutions that make a real impact.
+          </p>
               </div>
 
               <div className="space-y-4">
                 <h2 className="text-3xl font-bold text-gray-900 animate-fade-in">Our Mission</h2>
                 <p className="text-lg text-gray-600 leading-relaxed animate-slide-up" style={{ animationDelay: '0.4s' }}>
-                  With a focus on quality and customer satisfaction, we strive to be a trusted partner for businesses and individuals around the world.
-                </p>
+            With a focus on quality and customer satisfaction, we strive to be a trusted partner for businesses and individuals around the world.
+          </p>
               </div>
 
               {/* Stats Section */}
@@ -103,14 +103,14 @@ export default function About() {
                   </div>
                 ))}
               </div>
-            </div>
+        </div>
 
-            {/* Image Section */}
+        {/* Image Section */}
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
-                <img
-                  src={logo}
-                  alt="Team working together"
+          <img
+            src={logo}
+            alt="Team working together"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />

@@ -119,15 +119,15 @@ const Category = () => {
                   style={{ animationDelay: `${0.2 + index * 0.1}s` }}
                 >
                   <div className="relative aspect-w-16 aspect-h-9 overflow-hidden rounded-t-xl">
-                    <img
-                      src={imgSrc || "https://placehold.co/400x300"}
-                      alt={cat.name}
+                  <img
+                    src={imgSrc || "https://placehold.co/400x300"}
+                    alt={cat.name}
                       className="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-500"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "https://placehold.co/400x300";
-                      }}
-                    />
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "https://placehold.co/400x300";
+                    }}
+                  />
                     {/* Overlay with gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     
