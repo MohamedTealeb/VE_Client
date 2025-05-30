@@ -1,16 +1,90 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import Navbar from '../../Component/Shared/Navbar';
 import Footer from '../../Component/Shared/Footer';
+import { getAllProducts } from '../../Apis/Product_Api/Product';
+import { fetchCategories } from '../../Apis/Category_Api/Category';
 import './Product.css';
+import { addToCart } from '../../store/slices/orderSlice';
+import toast from 'react-hot-toast';
 
 export default function Product() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+  // Get categories from Redux store
+  const { categories, loading: categoriesLoading } = useSelector((state) => state.category);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch products
+        const productsResponse = await getAllProducts();
+        const productsData = Array.isArray(productsResponse) ? productsResponse : productsResponse.data || [];
+        console.log('Fetched Products:', productsData); // Debug log
+        setProducts(productsData);
+
+        // Fetch categories using Redux
+        dispatch(fetchCategories());
+
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError(err.message || 'Failed to fetch data');
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+
+  const handleCategoryChange = (e) => {
+    const categoryId = e.target.value;
+    console.log('Selected Category ID:', categoryId); // Debug log
+    setSelectedCategory(categoryId);
+  };
+
+  const filteredProducts = selectedCategory
+    ? products.filter(product => {
+        console.log('Product:', product); // Debug log
+        console.log('Selected Category ID:', selectedCategory); // Debug log
+        // Check if the product's category matches the selected category ID
+        return product.category === selectedCategory;
+      })
+    : products;
+
+  console.log('Filtered Products:', filteredProducts); // Debug log
 
   const handleLogout = () => {
-    // Only remove the token
     localStorage.removeItem('token');
   };
+
+  if (loading || categoriesLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
+        <Navbar onLogout={handleLogout} />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
+        <Navbar onLogout={handleLogout} />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-red-500">Error: {error}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
@@ -78,7 +152,7 @@ export default function Product() {
       {/* Stats Section */}
       <div className="bg-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
             {[
               { label: 'Total Products', value: '1,234' },
               { label: 'Happy Customers', value: '98%' },
@@ -94,31 +168,28 @@ export default function Product() {
         </div>
       </div>
 
-      {/* Filters Section */}
-      <div className="bg-white border-b border-gray-200">
+      {/* Category Filter Section */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center space-x-4">
-              <select className="rounded-lg border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm">
-                <option>All Categories</option>
-                <option>Electronics</option>
-                <option>Clothing</option>
-                <option>Accessories</option>
-              </select>
-              <select className="rounded-lg border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm">
-                <option>Price Range</option>
-                <option>Under $100</option>
-                <option>$100 - $500</option>
-                <option>Over $500</option>
-              </select>
-            </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-500">Sort by:</span>
-              <select className="rounded-lg border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm">
-                <option>Featured</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Newest</option>
+              <select 
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                className="rounded-lg border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm"
+              >
+                <option key="all" value="">All Categories</option>
+                {Array.isArray(categories) && categories.map((category, index) => {
+                  console.log('Category:', category); // Debug log
+                  return (
+                    <option 
+                      key={category?._id ? `category-${category._id}` : `category-${index}`} 
+                      value={category?._id || ''}
+                    >
+                      {category?.name || 'Unnamed Category'}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
@@ -128,11 +199,20 @@ export default function Product() {
       {/* Product Grid */}
       <section className="py-12 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-            {products.map((product, index) => (
-              <ProductCard key={index} {...product} />
-            ))}
-          </div>
+          {filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+              {filteredProducts.map((product, index) => (
+                <ProductCard 
+                  key={product?._id ? `product-${product._id}` : `product-${index}`}
+                  {...product} 
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">No products found in this category</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -178,39 +258,51 @@ function CompassIcon() {
 }
 
 // Product Card Component
-function ProductCard({ title, location, price, image, rating }) {
+function ProductCard({ title, price, cover_Image, discreption, _id }) {
+  const dispatch = useDispatch();
+
+  const handleAddToCart = () => {
+    dispatch(addToCart(_id))
+      .unwrap()
+      .then(() => {
+        toast.success('Product added to cart successfully!', {
+          duration: 2000,
+          position: 'top-right',
+          style: {
+            background: '#10B981',
+            color: '#fff',
+          },
+        });
+      })
+      .catch((error) => {
+        toast.error('Failed to add product to cart', {
+          duration: 2000,
+          position: 'top-right',
+          style: {
+            background: '#EF4444',
+            color: '#fff',
+          },
+        });
+      });
+  };
+
   return (
     <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
       <div className="relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-xl bg-gray-200">
-        {/* Image Container with Hover Effects */}
         <div className="relative h-64 w-full overflow-hidden">
           <img
-            src={image}
+            src={`${import.meta.env.VITE_IMAGEURL}${cover_Image}`}
             alt={title}
-            className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-2"
+            className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-110"
           />
-          {/* Overlay with gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
-          {/* Quick View Button */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <button className="transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white/90 hover:bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium shadow-lg">
               Quick View
             </button>
           </div>
         </div>
-
-        {/* Rating Badge */}
-        {rating && (
-          <div className="absolute top-4 right-4 transform translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
-            <div className="flex items-center bg-yellow-100 px-2 py-1 rounded-full shadow-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <span className="ml-1 text-sm font-medium text-yellow-800">{rating}</span>
-            </div>
-          </div>
-        )}
       </div>
       
       <div className="p-4">
@@ -219,13 +311,16 @@ function ProductCard({ title, location, price, image, rating }) {
             <h3 className="text-lg font-medium text-gray-900 group-hover:text-purple-600 transition-colors duration-300">
               {title}
             </h3>
-            <p className="mt-1 text-sm text-gray-500">{location}</p>
+            <p className="mt-1 text-sm text-gray-500 line-clamp-2">{discreption}</p>
           </div>
         </div>
 
         <div className="mt-4 flex items-center justify-between">
           <p className="text-lg font-bold text-gray-900">${price}</p>
-          <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 transform hover:scale-105">
+          <button 
+            onClick={handleAddToCart}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 transform hover:scale-105"
+          >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
@@ -236,57 +331,3 @@ function ProductCard({ title, location, price, image, rating }) {
     </div>
   );
 }
-
-// Sample Data
-const products = [
-  {
-    title: 'Adobe Photoshop CC 2022',
-    location: 'Lisbon, Portugal',
-    price: 850,
-    image: 'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=1170&q=80'
-  },
-  {
-    title: 'The Hilton Hotel',
-    location: 'Lisbon, Portugal',
-    price: 850,
-    image: 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&w=1170&q=80',
-    rating: '4.9'
-  },
-  {
-    title: 'The Hilton Hotel',
-    location: 'Lisbon, Portugal',
-    price: 450,
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1170&q=80'
-  },
-  {
-    title: 'The Hilton Hotel',
-    location: 'Lisbon, Portugal',
-    price: 450,
-    image: 'https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?auto=format&fit=crop&w=1170&q=80'
-  },
-  {
-    title: 'Adobe Photoshop CC 2022',
-    location: 'Lisbon, Portugal',
-    price: 850,
-    image: 'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=1170&q=80'
-  },
-  {
-    title: 'The Hilton Hotel',
-    location: 'Lisbon, Portugal',
-    price: 850,
-    image: 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&w=1170&q=80',
-    rating: '4.9'
-  },
-  {
-    title: 'The Hilton Hotel',
-    location: 'Lisbon, Portugal',
-    price: 450,
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1170&q=80'
-  },
-  {
-    title: 'The Hilton Hotel',
-    location: 'Lisbon, Portugal',
-    price: 450,
-    image: 'https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?auto=format&fit=crop&w=1170&q=80'
-  }
-];

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useNavigate } from 'react-router-dom';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
@@ -10,6 +11,7 @@ import Navbar from './../../Component/Shared/Navbar';
 import '../Home/Home.css'
 import Footer from '../../Component/Shared/Footer';
 export default function Home() {
+  const navigate = useNavigate();
   const items = [
     { id: 1, name: 'POPPY BIRDS HAT', price: 'LE 1,949.00', image: img2 },
     { id: 2, name: 'GATOR LOUNGE', price: 'LE 2,052.00', image: img2 },
@@ -95,7 +97,10 @@ export default function Home() {
  <div className="mt-16 px-4 sm:px-6 md:px-10 max-w-7xl mx-auto">
   <div className="flex justify-between items-center mb-8">
     <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Latest Drops</h2>
-    <button className="text-sm font-medium text-gray-600 hover:text-black transition-colors duration-300">
+    <button 
+      onClick={() => navigate('/product')}
+      className="text-sm font-medium text-gray-600 hover:text-black transition-colors duration-300"
+    >
       View All →
     </button>
   </div>
