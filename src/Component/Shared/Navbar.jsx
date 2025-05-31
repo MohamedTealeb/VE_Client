@@ -66,7 +66,7 @@ function Navbar() {
         <nav className="hidden md:block">
           <ul className="flex space-x-6">
             <li><a href="/product" className="text-gray-700 hover:text-gray-900">Product</a></li>
-            <li><a href="/sale" className="text-gray-700 hover:text-gray-900">Sale</a></li>
+            {/* <li><a href="/sale" className="text-gray-700 hover:text-gray-900">Sale</a></li> */}
             <li><a href="/about" className="text-gray-700 hover:text-gray-900">About</a></li>
             <li><a href="/category" className="text-gray-700 hover:text-gray-900">Category</a></li>
           </ul>
@@ -153,7 +153,7 @@ function Navbar() {
         <div className="md:hidden bg-white shadow px-4 py-3 flex flex-col items-center">
           <ul className="space-y-3 text-center">
             <li><a href="/product" className="block text-gray-700 hover:text-gray-900">Product</a></li>
-            <li><a href="/sale" className="block text-gray-700 hover:text-gray-900">Sale</a></li>
+            {/* <li><a href="/sale" className="block text-gray-700 hover:text-gray-900">Sale</a></li> */}
             <li><a href="/about" className="block text-gray-700 hover:text-gray-900">About</a></li>
             <li><a href="/reviews" className="block text-gray-700 hover:text-gray-900">Reviews</a></li>
             {isLoggedIn ? (
