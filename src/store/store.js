@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './slices/AuthSlice';
-import categoryReducer from './slices/CategorySlice';
+import authReducer from './slices/authSlice';
+import categoryReducer from './slices/categorySlice';
 import OrderReducer from './slices/orderSlice';
 
 export const store = configureStore({
