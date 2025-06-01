@@ -20,13 +20,24 @@ export default function Product() {
   // Get categories from Redux store
   const { categories, loading: categoriesLoading } = useSelector((state) => state.category);
 
+  // Function to get category ID by name
+  const getCategoryIdByName = (categoryName) => {
+    const category = categories.find(cat => cat.name.toLowerCase() === categoryName.toLowerCase());
+    return category ? category._id : '';
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch products
-        const productsResponse = await getAllProducts();
+        let productsResponse;
+        if (selectedCategory) {
+          const categoryId = getCategoryIdByName(selectedCategory);
+          productsResponse = await getAllProducts({ categoryId });
+        } else {
+          productsResponse = await getAllProducts();
+        }
         const productsData = Array.isArray(productsResponse) ? productsResponse : productsResponse.data || [];
-        console.log('Fetched Products:', productsData); // Debug log
         setProducts(productsData);
 
         // Fetch categories using Redux
@@ -41,24 +52,15 @@ export default function Product() {
     };
 
     fetchData();
-  }, [dispatch]);
+  }, [dispatch, selectedCategory]);
 
   const handleCategoryChange = (e) => {
-    const categoryId = e.target.value;
-    console.log('Selected Category ID:', categoryId); // Debug log
-    setSelectedCategory(categoryId);
+    const categoryName = e.target.value;
+    setSelectedCategory(categoryName);
   };
 
-  const filteredProducts = selectedCategory
-    ? products.filter(product => {
-        console.log('Product:', product); // Debug log
-        console.log('Selected Category ID:', selectedCategory); // Debug log
-        // Check if the product's category matches the selected category ID
-        return product.category === selectedCategory;
-      })
-    : products;
-
-  console.log('Filtered Products:', filteredProducts); // Debug log
+  // Remove client-side filtering since we get filtered products from API
+  const displayProducts = products;
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -178,18 +180,12 @@ export default function Product() {
                 onChange={handleCategoryChange}
                 className="rounded-lg border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm"
               >
-                <option key="all" value="">All Categories</option>
-                {Array.isArray(categories) && categories.map((category, index) => {
-                  console.log('Category:', category); // Debug log
-                  return (
-                    <option 
-                      key={category?._id ? `category-${category._id}` : `category-${index}`} 
-                      value={category?._id || ''}
-                    >
-                      {category?.name || 'Unnamed Category'}
-                    </option>
-                  );
-                })}
+                <option value="">All Categories</option>
+                {categories.map((category) => (
+                  <option key={category._id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -199,14 +195,21 @@ export default function Product() {
       {/* Product Grid */}
       <section className="py-12 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {filteredProducts.length > 0 ? (
+          {displayProducts.length > 0 ? (
             <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-              {filteredProducts.map((product, index) => (
-                <ProductCard 
-                  key={product?._id ? `product-${product._id}` : `product-${index}`}
-                  {...product} 
-                />
-              ))}
+              {displayProducts.map((product) => {
+                console.log('Product being rendered:', product); // Debug log
+                return (
+                  <ProductCard 
+                    key={product.id || product._id}
+                    id={product.id || product._id}
+                    title={product.title}
+                    price={product.price}
+                    cover_Image={product.cover_Image}
+                    discreption={product.discreption}
+                  />
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-12">
@@ -216,7 +219,6 @@ export default function Product() {
         </div>
       </section>
 
-   
       <Footer />
     </div>
   );
@@ -258,11 +260,12 @@ function CompassIcon() {
 }
 
 // Product Card Component
-function ProductCard({ title, price, cover_Image, discreption, _id }) {
+function ProductCard({ id, title, price, cover_Image, discreption }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleAddToCart = () => {
-    dispatch(addToCart(_id))
+    dispatch(addToCart(id))
       .unwrap()
       .then(() => {
         toast.success('Product added to cart successfully!', {
@@ -286,6 +289,15 @@ function ProductCard({ title, price, cover_Image, discreption, _id }) {
       });
   };
 
+  const handleImageClick = () => {
+    if (!id) {
+      toast.error('Product ID is missing');
+      return;
+    }
+    console.log('Navigating to product with ID:', id); // Debug log
+    navigate(`/product_det/${id}`);
+  };
+
   return (
     <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
       <div className="relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-xl bg-gray-200">
@@ -293,12 +305,16 @@ function ProductCard({ title, price, cover_Image, discreption, _id }) {
           <img
             src={`${import.meta.env.VITE_IMAGEURL}${cover_Image}`}
             alt={title}
-            className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-110"
+            className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-110 cursor-pointer"
+            onClick={handleImageClick}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button className="transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white/90 hover:bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium shadow-lg">
+            <button 
+              onClick={handleImageClick}
+              className="transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white/90 hover:bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium shadow-lg"
+            >
               Quick View
             </button>
           </div>
@@ -308,7 +324,10 @@ function ProductCard({ title, price, cover_Image, discreption, _id }) {
       <div className="p-4">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="text-lg font-medium text-gray-900 group-hover:text-purple-600 transition-colors duration-300">
+            <h3 
+              className="text-lg font-medium text-gray-900 group-hover:text-purple-600 transition-colors duration-300 cursor-pointer"
+              onClick={handleImageClick}
+            >
               {title}
             </h3>
             <p className="mt-1 text-sm text-gray-500 line-clamp-2">{discreption}</p>

@@ -1,23 +1,78 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import Navbar from '../../Component/Shared/Navbar';
+import { getProductById } from '../../Apis/Product_Api/Product';
+import toast from 'react-hot-toast';
 
 export default function Product_Det() {
-  const productImages = [
-    'https://images.unsplash.com/photo-1578262825743-a4e402caab76?ixlib=rb-1.2.1&auto=format&fit=crop&w=1051&q=80',
-    'https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80',
-    'https://images.unsplash.com/photo-1590664863685-a99ef05e9f61?ixlib=rb-1.2.1&auto=format&fit=crop&w=345&q=80',
-  ];
-
-  const [selectedImage, setSelectedImage] = useState(productImages[0]);
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState('blue');
-  const [selectedSize, setSelectedSize] = useState('M');
+  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedSize, setSelectedSize] = useState('');
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        if (!id) {
+          toast.error('Product ID is missing');
+          return;
+        }
+        console.log('Fetching product with ID:', id); // Debug log
+        const productData = await getProductById(id);
+        console.log('Fetched product data:', productData); // Debug log
+        if (!productData) {
+          toast.error('Product not found');
+          return;
+        }
+        setProduct(productData);
+        setSelectedImage(productData.cover_Image);
+        if (productData.colors && productData.colors.length > 0) {
+          setSelectedColor(productData.colors[0]);
+        }
+        if (productData.sizes && productData.sizes.length > 0) {
+          setSelectedSize(productData.sizes[0]);
+        }
+      } catch (error) {
+        toast.error('Failed to load product details');
+        console.error('Error fetching product:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
 
   const handleIncrement = () => setQuantity((prev) => prev + 1);
   const handleDecrement = () => setQuantity((prev) => Math.max(1, prev - 1));
-  const handleOrder = () => console.log(`Ordered: Nike Air, Quantity: ${quantity}, Color: ${selectedColor}, Size: ${selectedSize}`);
-  const handleAddToCart = () => console.log(`Added to cart: Nike Air, Quantity: ${quantity}, Color: ${selectedColor}, Size: ${selectedSize}`);
+  const handleOrder = () => console.log(`Ordered: ${product?.title}, Quantity: ${quantity}, Color: ${selectedColor}, Size: ${selectedSize}`);
+  const handleAddToCart = () => console.log(`Added to cart: ${product?.title}, Quantity: ${quantity}, Color: ${selectedColor}, Size: ${selectedSize}`);
+
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        </div>
+      </>
+    );
+  }
+
+  if (!product) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center">
+          <div className="text-red-500">Product not found</div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -30,11 +85,11 @@ export default function Product_Det() {
               <div className="bg-white rounded-2xl shadow-lg p-4">
                 <img
                   className="h-[500px] w-full rounded-xl object-cover transition-transform duration-500 hover:scale-105"
-                  src={selectedImage}
-                  alt="Nike Air"
+                  src={`${import.meta.env.VITE_IMAGEURL}${selectedImage}`}
+                  alt={product.title}
                 />
                 <div className="flex justify-center mt-6 space-x-4">
-                  {productImages.map((img, index) => (
+                  {[product.cover_Image, ...(product.images || [])].map((img, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(img)}
@@ -43,7 +98,7 @@ export default function Product_Det() {
                       }`}
                     >
                       <img
-                        src={img}
+                        src={`${import.meta.env.VITE_IMAGEURL}${img}`}
                         alt={`Thumbnail ${index}`}
                         className="w-full h-full object-cover"
                       />
@@ -56,51 +111,53 @@ export default function Product_Det() {
             {/* Product Info */}
             <div className="w-full md:w-1/2 mt-8 md:mt-0">
               <div className="bg-white rounded-2xl shadow-lg p-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Nike Air</h1>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.title}</h1>
                 <div className="flex items-center mb-6">
-                  <span className="text-3xl font-bold text-blue-600">$125</span>
-                  <span className="ml-3 text-lg text-gray-500 line-through">$150</span>
-                  <span className="ml-3 px-3 py-1 text-sm font-semibold text-green-600 bg-green-100 rounded-full">20% OFF</span>
+                  <span className="text-3xl font-bold text-blue-600">${product.price}</span>
                 </div>
 
                 <div className="space-y-8">
                   {/* Size Selector */}
-                  <div>
-                    <label className="text-gray-700 font-medium text-lg mb-3 block">Size:</label>
-                    <div className="flex space-x-3">
-                      {['XS', 'S', 'M', 'L', 'XL'].map((size) => (
-                        <button
-                          key={size}
-                          onClick={() => setSelectedSize(size)}
-                          className={`w-12 h-12 rounded-lg border-2 text-lg font-medium transition-all duration-300 transform hover:scale-110 ${
-                            selectedSize === size
-                              ? 'border-blue-600 bg-blue-50 text-blue-600'
-                              : 'border-gray-300 text-gray-600 hover:border-blue-400'
-                          }`}
-                        >
-                          {size}
-                        </button>
-                      ))}
+                  {product.sizes && product.sizes.length > 0 && (
+                    <div>
+                      <label className="text-gray-700 font-medium text-lg mb-3 block">Size:</label>
+                      <div className="flex space-x-3">
+                        {product.sizes.map((size) => (
+                          <button
+                            key={size}
+                            onClick={() => setSelectedSize(size)}
+                            className={`w-12 h-12 rounded-lg border-2 text-lg font-medium transition-all duration-300 transform hover:scale-110 ${
+                              selectedSize === size
+                                ? 'border-blue-600 bg-blue-50 text-blue-600'
+                                : 'border-gray-300 text-gray-600 hover:border-blue-400'
+                            }`}
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Color Selector */}
-                  <div>
-                    <label className="text-gray-700 font-medium text-lg mb-3 block">Color:</label>
-                    <div className="flex space-x-4">
-                      {['blue', 'teal', 'pink'].map((color) => (
-                        <button
-                          key={color}
-                          onClick={() => setSelectedColor(color)}
-                          className={`w-12 h-12 rounded-full border-2 transition-all duration-300 transform hover:scale-110 ${
-                            selectedColor === color
-                              ? `bg-${color}-600 border-${color}-200 ring-2 ring-${color}-200 ring-offset-2`
-                              : `bg-${color}-600 border-gray-300`
-                          }`}
-                        />
-                      ))}
+                  {product.colors && product.colors.length > 0 && (
+                    <div>
+                      <label className="text-gray-700 font-medium text-lg mb-3 block">Color:</label>
+                      <div className="flex space-x-4">
+                        {product.colors.map((color) => (
+                          <button
+                            key={color}
+                            onClick={() => setSelectedColor(color)}
+                            className={`w-12 h-12 rounded-full border-2 transition-all duration-300 transform hover:scale-110 ${
+                              selectedColor === color
+                                ? `bg-${color}-600 border-${color}-200 ring-2 ring-${color}-200 ring-offset-2`
+                                : `bg-${color}-600 border-gray-300`
+                            }`}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Quantity Selector */}
                   <div>
@@ -127,6 +184,14 @@ export default function Product_Det() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Description */}
+                  {product.discreption && (
+                    <div>
+                      <label className="text-gray-700 font-medium text-lg mb-3 block">Description:</label>
+                      <p className="text-gray-600">{product.discreption}</p>
+                    </div>
+                  )}
 
                   {/* Action Buttons */}
                   <div className="flex space-x-4 pt-6">

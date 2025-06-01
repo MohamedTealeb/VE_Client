@@ -53,11 +53,14 @@ api.interceptors.response.use(
   }
 );
 
-// Get all products
-export const getAllProducts = async () => {
+// Get all products with optional filters
+export const getAllProducts = async (params = {}) => {
   try {
-    console.log('Fetching products from:', `${import.meta.env.VITE_BASEURL}/products`);
-    const response = await api.get('/products');
+    // Build query string from params
+    const query = new URLSearchParams(params).toString();
+    const url = query ? `/products?${query}` : '/products';
+    console.log('Fetching products from:', `${import.meta.env.VITE_BASEURL}${url}`);
+    const response = await api.get(url);
     console.log('Products API Response:', response.data);
     return response.data;
   } catch (error) {
@@ -69,9 +72,12 @@ export const getAllProducts = async () => {
 // Get product by ID
 export const getProductById = async (id) => {
   try {
+    console.log('Fetching product with ID:', id); // Debug log
     const response = await api.get(`/products/${id}`);
+    console.log('Product API Response:', response.data); // Debug log
     return response.data;
   } catch (error) {
+    console.error('Product API Error:', error.response?.data || error.message);
     throw error.response?.data || error.message;
   }
 };

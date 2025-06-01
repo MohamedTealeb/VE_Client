@@ -38,8 +38,8 @@ export default function Login() {
   return (
     <>
       <Toaster />
-      <div className="flex flex-col lg:flex-row h-screen bg-[#050608]">
-        <div className="w-full lg:w-1/2 h-screen">
+      <div className="flex flex-col lg:flex-row min-h-screen bg-[#050608]">
+        <div className="w-full lg:w-1/2 h-[40vh] lg:h-screen">
           <img
             src={logo}
             alt="Background"
@@ -47,7 +47,7 @@ export default function Login() {
           />
         </div>
 
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-36">
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-36 bg-gradient-to-r from-[#050608] to-[#050608]">
           <div className="w-full max-w-md text-white">
             <h1 className="text-2xl font-semibold mb-4">Login</h1>
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useNavigate } from 'react-router-dom';
 import 'swiper/css';
@@ -10,7 +10,10 @@ import img2 from '../../assets/WhatsApp Image 2025-05-10 at 23.43.31_0f57f908.jp
 import Navbar from './../../Component/Shared/Navbar';
 import '../Home/Home.css'
 import Footer from '../../Component/Shared/Footer';
+import axios from 'axios';
+
 export default function Home() {
+  const [latestProducts, setLatestProducts] = useState([]);
   const navigate = useNavigate();
   const items = [
     { id: 1, name: 'POPPY BIRDS HAT', price: 'LE 1,949.00', image: img2 },
@@ -33,6 +36,33 @@ export default function Home() {
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
+
+  useEffect(() => {
+    const fetchLatestProducts = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BASEURL}/products?limit=5`);
+        console.log('Latest products API response:', response.data);
+        // Handle different possible response structures
+        if (Array.isArray(response.data)) {
+          setLatestProducts(response.data);
+        } else if (Array.isArray(response.data.data)) {
+          setLatestProducts(response.data.data);
+        } else if (Array.isArray(response.data.products)) {
+          setLatestProducts(response.data.products);
+        } else {
+          setLatestProducts([]); // fallback
+        }
+      } catch (error) {
+        console.error('Error fetching latest products:', error);
+      }
+    };
+    fetchLatestProducts();
+  }, []);
+
+  const handleProductClick = (id) => {
+    navigate(`/product_det/${id}`);
+  };
+
   return <>
 <Navbar />
     <div className="relative w-full h-[600px] overflow-hidden">
@@ -106,13 +136,14 @@ export default function Home() {
   </div>
 
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-    {displayedItems.map((item) => (
-      <div key={item.id} className="group">
+    {latestProducts.map(product => (
+      <div key={product._id} className="group">
         <div className="relative overflow-hidden rounded-lg bg-gray-100">
           <img
-            src={item.image}
-            alt={item.name}
-            className="w-full h-[400px] object-cover transform group-hover:scale-105 transition-transform duration-500"
+            src={`${import.meta.env.VITE_IMAGEURL}${product.cover_Image}`}
+            alt={product.title}
+            className="w-full h-[400px] object-cover transform group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+            onClick={() => handleProductClick(product._id)}
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
           <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white text-black px-6 py-2 rounded-full text-sm font-medium opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
@@ -120,8 +151,8 @@ export default function Home() {
           </button>
         </div>
         <div className="mt-4 space-y-1">
-          <h3 className="text-lg font-medium text-gray-900 group-hover:text-black transition-colors duration-300">{item.name}</h3>
-          <p className="text-base font-semibold text-gray-700">{item.price}</p>
+          <h3 className="text-lg font-medium text-gray-900 group-hover:text-black transition-colors duration-300">{product.title}</h3>
+          <p className="text-base font-semibold text-gray-700">${product.price}</p>
         </div>
       </div>
     ))}
