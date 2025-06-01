@@ -85,7 +85,7 @@ export default function Home() {
         }}
         className="w-full h-full"
       >
-        <SwiperSlide>
+        <SwiperSlide key="slide-1">
           <div className="relative w-full h-full">
             <img src={img1} alt="Slide" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30 flex flex-col justify-center items-start px-[10%] text-white">
@@ -97,7 +97,7 @@ export default function Home() {
             </div>
           </div>
         </SwiperSlide>
-        <SwiperSlide>
+        <SwiperSlide key="slide-2">
           <div className="relative w-full h-full">
             <img src={img1} alt="Slide" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30 flex flex-col justify-center items-start px-[10%] text-white">
@@ -109,7 +109,7 @@ export default function Home() {
             </div>
           </div>
         </SwiperSlide>
-        <SwiperSlide>
+        <SwiperSlide key="slide-3">
           <div className="relative w-full h-full">
             <img src={img2} alt="Slide" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30 flex flex-col justify-center items-start px-[10%] text-white">
@@ -136,8 +136,8 @@ export default function Home() {
   </div>
 
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-    {latestProducts.map(product => (
-      <div key={product._id} className="group">
+    {latestProducts && latestProducts.map((product, index) => (
+      <div key={product?._id || `product-${index}`} className="group">
         <div className="relative overflow-hidden rounded-lg bg-gray-100">
           <img
             src={`${import.meta.env.VITE_IMAGEURL}${product.cover_Image}`}
@@ -171,7 +171,7 @@ export default function Home() {
     <div className="flex items-center gap-2">
       {[...Array(totalPages)].map((_, index) => (
         <button
-          key={index}
+          key={`page-${index + 1}`}
           onClick={() => setCurrentPage(index + 1)}
           className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors duration-300 ${
             currentPage === index + 1

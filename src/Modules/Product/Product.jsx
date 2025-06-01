@@ -20,20 +20,13 @@ export default function Product() {
   // Get categories from Redux store
   const { categories, loading: categoriesLoading } = useSelector((state) => state.category);
 
-  // Function to get category ID by name
-  const getCategoryIdByName = (categoryName) => {
-    const category = categories.find(cat => cat.name.toLowerCase() === categoryName.toLowerCase());
-    return category ? category._id : '';
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch products
         let productsResponse;
         if (selectedCategory) {
-          const categoryId = getCategoryIdByName(selectedCategory);
-          productsResponse = await getAllProducts({ categoryId });
+          productsResponse = await getAllProducts({ categoryId: selectedCategory });
         } else {
           productsResponse = await getAllProducts();
         }
@@ -55,8 +48,8 @@ export default function Product() {
   }, [dispatch, selectedCategory]);
 
   const handleCategoryChange = (e) => {
-    const categoryName = e.target.value;
-    setSelectedCategory(categoryName);
+    const categoryId = e.target.value;
+    setSelectedCategory(categoryId);
   };
 
   // Remove client-side filtering since we get filtered products from API
@@ -180,9 +173,9 @@ export default function Product() {
                 onChange={handleCategoryChange}
                 className="rounded-lg border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm"
               >
-                <option value="">All Categories</option>
-                {categories.map((category) => (
-                  <option key={category._id} value={category.name}>
+                <option key="all" value="">All Categories</option>
+                {categories && categories.filter(category => category && category._id).map((category, index) => (
+                  <option key={`category-${category._id || index}`} value={category._id}>
                     {category.name}
                   </option>
                 ))}
