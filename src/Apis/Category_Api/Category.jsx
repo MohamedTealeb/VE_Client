@@ -16,3 +16,13 @@ export const fetchCategories = createAsyncThunk(
   }
 );
 
+export const getAllCategories = async () => {
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_BASEURL}/categories`);
+    return response.data;
+  } catch (error) {
+    console.error('getAllCategories API Error:', error);
+    throw error.response?.data || error.message;
+  }
+};
+

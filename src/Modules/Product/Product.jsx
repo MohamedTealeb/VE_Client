@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Navbar from '../../Component/Shared/Navbar';
 import Footer from '../../Component/Shared/Footer';
 import { getAllProducts } from '../../Apis/Product_Api/Product';
-import { fetchCategories } from '../../Apis/Category_Api/Category';
+
+import { fetchCategories, getAllCategories } from '../../Apis/Category_Api/Category';
 import './Product.css';
 import { addToCart } from '../../store/slices/orderSlice';
 import toast from 'react-hot-toast';
@@ -16,6 +17,12 @@ export default function Product() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const imageBaseUrl = import.meta.env.VITE_IMAGEURL;
+  const getImageUrl = (image) => {
+    if (!image) return null;
+    const imagePath = image.startsWith('/') ? image : `/${image}`;
+    return image.startsWith('http') ? image : `${imageBaseUrl}${imagePath}`;
+  };
 
   // Get categories from Redux store
   const { categories, loading: categoriesLoading } = useSelector((state) => state.category);
@@ -256,6 +263,14 @@ function CompassIcon() {
 function ProductCard({ id, title, price, cover_Image, discreption }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const imageBaseUrl = import.meta.env.VITE_IMAGEURL;
+
+  // Define getImageUrl here
+  const getImageUrl = (image) => {
+    if (!image) return null;
+    const imagePath = image.startsWith('/') ? image : `/${image}`;
+    return image.startsWith('http') ? image : `${imageBaseUrl}${imagePath}`;
+  };
 
   const handleAddToCart = () => {
     dispatch(addToCart(id))
@@ -291,12 +306,14 @@ function ProductCard({ id, title, price, cover_Image, discreption }) {
     navigate(`/product_det/${id}`);
   };
 
+  const imgSrc = getImageUrl(cover_Image);
+
   return (
     <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
       <div className="relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-xl bg-gray-200">
         <div className="relative h-64 w-full overflow-hidden">
           <img
-            src={`${import.meta.env.VITE_IMAGEURL}${cover_Image}`}
+            src={imgSrc}
             alt={title}
             className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-110 cursor-pointer"
             onClick={handleImageClick}
