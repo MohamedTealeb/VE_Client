@@ -50,7 +50,7 @@ export default function Login() {
         <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-36 bg-gradient-to-r from-[#050608] to-[#050608]">
           <div className="w-full max-w-md text-white">
             <h1 className="text-2xl font-semibold mb-4">Login</h1>
-
+ 
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label htmlFor="email" className="block text-white">
