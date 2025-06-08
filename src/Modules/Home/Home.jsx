@@ -154,8 +154,8 @@ export default function Home() {
               onClick={e => { e.stopPropagation(); handleProductClick(product._id || product.id); }}
               className="transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white/90 hover:bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium shadow-lg cursor-pointer"
             >
-              Quick View
-            </button>
+            Quick View
+          </button>
           </div>
         </div>
         <div className="mt-4 space-y-1">

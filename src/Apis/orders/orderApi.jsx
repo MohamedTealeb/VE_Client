@@ -33,9 +33,23 @@ export const orderApi = {
     // Create new order
     createOrder: async (orderData) => {
         try {
-            const response = await api.post('/order', orderData);
+            // Log the request data
+            console.log('Creating order with data:', orderData);
+            
+            // Ensure all required fields are present
+            if (!orderData.productId) throw new Error('Product ID is required');
+            if (!orderData.quantity) throw new Error('Quantity is required');
+            if (!orderData.address) throw new Error('Address is required');
+            if (!orderData.phone) throw new Error('Phone is required');
+
+            // Ensure quantity is a number
+            orderData.quantity = Number(orderData.quantity);
+
+            const response = await api.post('/orders', orderData);
+            console.log('Order created successfully:', response.data);
             return response.data;
         } catch (error) {
+            console.error('Error creating order:', error.response?.data || error.message);
             throw error.response?.data || error.message;
         }
     },
@@ -43,7 +57,7 @@ export const orderApi = {
     // Get all orders
     getOrders: async () => {
         try {
-            const response = await api.get('/order');
+            const response = await api.get('/orders');
             return response.data;
         } catch (error) {
             throw error.response?.data || error.message;
@@ -53,7 +67,7 @@ export const orderApi = {
     // Get order by ID
     getOrderById: async (orderId) => {
         try {
-            const response = await api.get(`/order/${orderId}`);
+            const response = await api.get(`/orders/${orderId}`);
             return response.data;
         } catch (error) {
             throw error.response?.data || error.message;
@@ -63,7 +77,7 @@ export const orderApi = {
     // Update order
     updateOrder: async (orderId, orderData) => {
         try {
-            const response = await api.put(`/order/${orderId}`, orderData);
+            const response = await api.put(`/orders/${orderId}`, orderData);
             return response.data;
         } catch (error) {
             throw error.response?.data || error.message;
@@ -73,24 +87,14 @@ export const orderApi = {
     // Delete order
     deleteOrder: async (orderId) => {
         try {
-            const response = await api.delete(`/order/${orderId}`);
+            const response = await api.delete(`/orders/${orderId}`);
             return response.data;
         } catch (error) {
             throw error.response?.data || error.message;
         }
     },
 
-    // Add to cart
-    addToCart: async (productId) => {
-        try {
-            const response = await api.post('/orders', {
-                productId: productId
-            });
-            return response;
-        } catch (error) {
-            throw error;
-        }
-    },
+  
 
     // Get order items
     getCartItems: async () => {
@@ -126,6 +130,15 @@ export const orderApi = {
     placeOrder: async (orderData) => {
         try {
             const response = await api.post('/orders/place', orderData);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
+    getOrdersMe: async () => {
+        try {
+            const response = await api.get('/orders/me');
             return response.data;
         } catch (error) {
             throw error.response?.data || error.message;

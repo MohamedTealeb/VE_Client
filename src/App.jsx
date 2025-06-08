@@ -13,6 +13,8 @@ import About from "./Modules/About/About";
 
 import Product_Det from "./Modules/Product/Product_Det";
 
+
+
 function App() {
   const location = useLocation();
   const isAuthPage = location.pathname === "/login" || location.pathname === "/signup" || location.pathname === "/forgot-password";
@@ -49,6 +51,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
 
           {/* Redirect any unknown routes to home */}
           <Route path="*" element={<Navigate to="/home" replace />} />

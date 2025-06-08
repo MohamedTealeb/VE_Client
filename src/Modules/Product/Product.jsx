@@ -10,6 +10,7 @@ import './Product.css';
 import { addToCart } from '../../store/slices/orderSlice';
 import toast from 'react-hot-toast';
 import Product_Det from './Product_Det';
+import { orderApi } from '../../Apis/orders/orderApi';
 
 export default function Product() {
   const navigate = useNavigate();
@@ -207,6 +208,7 @@ export default function Product() {
                       price={product.price}
                       cover_Image={product.cover_Image}
                       discreption={product.discreption}
+                      stock={product.stock}
                     />
                   );
                 })}
@@ -261,7 +263,7 @@ function CompassIcon() {
 }
 
 // Product Card Component
-function ProductCard({ id, title, price, cover_Image, discreption }) {
+function ProductCard({ id, title, price, cover_Image, discreption, stock }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const imageBaseUrl = import.meta.env.VITE_IMAGEURL;
@@ -270,29 +272,25 @@ function ProductCard({ id, title, price, cover_Image, discreption }) {
     const imagePath = image.startsWith('/') ? image : `/${image}`;
     return image.startsWith('http') ? image : `${imageBaseUrl}${imagePath}`;
   };
-  const handleAddToCart = () => {
-    dispatch(addToCart(id))
-      .unwrap()
-      .then(() => {
-        toast.success('Product added to cart successfully!', {
-          duration: 2000,
-          position: 'top-right',
-          style: {
-            background: '#10B981',
-            color: '#fff',
-          },
-        });
-      })
-      .catch((error) => {
-        toast.error('Failed to add product to cart', {
-          duration: 2000,
-          position: 'top-right',
-          style: {
-            background: '#EF4444',
-            color: '#fff',
-          },
-        });
+  const handleAddToCart = async () => {
+    if (stock === 0) {
+      toast.error('This product is sold out');
+      return;
+    }
+    const address = prompt('Enter your address:');
+    const phone = prompt('Enter your phone:');
+    if (!address || !phone) return;
+    try {
+      await orderApi.createOrder({
+        productId: id || _id,
+        quantity: 1,
+        address,
+        phone,
       });
+      toast.success('Order created successfully!');
+    } catch (error) {
+      toast.error('Failed to create order');
+    }
   };
   const handleQuickView = () => {
     if (!id) {
@@ -308,6 +306,11 @@ function ProductCard({ id, title, price, cover_Image, discreption }) {
       onClick={handleQuickView}
     >
       <div className="relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-xl bg-gray-200">
+        {stock === 0 && (
+          <div className="w-full mb-2">
+            <span className="text-white text-xl font-bold bg-red-600 px-4 py-2 rounded-lg block text-center">Sold Out</span>
+          </div>
+        )}
         <div className="relative h-64 w-full overflow-hidden">
           <img
             src={imgSrc}

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../Component/Shared/Navbar';
 import { getProductById } from '../../Apis/Product_Api/Product';
 import toast from 'react-hot-toast';
+import { orderApi } from '../../Apis/orders/orderApi';
 
 export default function Product_Det() {
   const [searchParams] = useSearchParams();
@@ -14,6 +15,7 @@ export default function Product_Det() {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -50,8 +52,14 @@ export default function Product_Det() {
 
   const handleIncrement = () => setQuantity((prev) => prev + 1);
   const handleDecrement = () => setQuantity((prev) => Math.max(1, prev - 1));
-  const handleOrder = () => console.log(`Ordered: ${product?.name}, Quantity: ${quantity}, Color: ${selectedColor}, Size: ${selectedSize}`);
-  const handleAddToCart = () => console.log(`Added to cart: ${product?.name}, Quantity: ${quantity}, Color: ${selectedColor}, Size: ${selectedSize}`);
+  const handleOrder = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    navigate('/cart', { state: { product, quantity } });
+  };
 
   if (loading) {
     return (
@@ -83,11 +91,18 @@ export default function Product_Det() {
           <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 flex flex-col md:flex-row gap-8">
             {/* Product Image */}
             <div className="flex-1 flex flex-col items-center">
-              <img
-                className="w-full max-w-xs h-80 object-cover rounded-xl shadow"
-                src={`${import.meta.env.VITE_IMAGEURL}${selectedImage || product.cover_Image}`}
-                alt={product.name}
-              />
+              {product.stock === 0 && (
+                <div className="w-full max-w-xs mb-4">
+                  <span className="text-white text-2xl font-bold bg-red-600 px-6 py-2 rounded-lg block text-center">Sold Out</span>
+                </div>
+              )}
+              <div className="relative">
+                <img
+                  className="w-full max-w-xs h-80 object-cover rounded-xl shadow"
+                  src={`${import.meta.env.VITE_IMAGEURL}${selectedImage || product.cover_Image}`}
+                  alt={product.name}
+                />
+              </div>
               {/* Thumbnails */}
               <div className="flex gap-4 mt-4 justify-center">
                 {/* Main Image Thumbnail */}
@@ -219,12 +234,6 @@ export default function Product_Det() {
                   className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-xl text-lg font-medium hover:bg-blue-700 transition-colors duration-300 cursor-pointer"
                 >
                   Order Now
-                </button>
-                <button
-                  onClick={handleAddToCart}
-                  className="flex-1 border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-xl text-lg font-medium hover:bg-blue-50 transition-colors duration-300 cursor-pointer"
-                >
-                  Add to Cart
                 </button>
               </div>
             </div>
