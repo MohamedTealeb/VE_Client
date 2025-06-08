@@ -46,15 +46,23 @@ function Navbar() {
 
   const handleSearch = async (query) => {
     setSearchQuery(query);
-    if (query.length < 1) {
-      setSearchResults([]);
-      return;
-    }
-
     setIsSearching(true);
     try {
-      const apiResults = await getAllProducts({ name: query });
-      setSearchResults(Array.isArray(apiResults) ? apiResults : apiResults.data || []);
+      // Get all products
+      const apiResults = await getAllProducts();
+      let results = Array.isArray(apiResults) ? apiResults : apiResults.data || [];
+      if (!query || query.length < 1) {
+        setSearchResults(results);
+        setIsSearching(false);
+        return;
+      }
+      // Filter by name or description
+      const filtered = results.filter(
+        (product) =>
+          (product.name && product.name.toLowerCase().includes(query.toLowerCase())) ||
+          (product.discreption && product.discreption.toLowerCase().includes(query.toLowerCase()))
+      );
+      setSearchResults(filtered);
     } catch (error) {
       console.error('Error searching products:', error);
       setSearchResults([]);
@@ -209,32 +217,48 @@ function Navbar() {
               </div>
             )}
             {searchQuery.length > 0 && (
-              <div className="absolute w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+              <div className="absolute left-0 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
                 {searchResults.length > 0 ? (
-                  searchResults.map((product) => (
-                    <div
-                      key={product._id}
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center"
-                      onClick={() => handleProductClick(product._id)}
-                    >
-                      {product.cover_Image && (
-                        <img
-                          src={product.cover_Image}
-                          alt={product.name}
-                          className="w-10 h-10 object-cover rounded mr-3"
-                        />
-                      )}
-                      <div>
-                        <div className="font-medium text-gray-900">{product.name}</div>
-                        <div className="text-sm text-gray-500">${product.price}</div>
-                        {product.discreption && (
-                          <div className="text-xs text-gray-400 mt-1 line-clamp-2">
-                            {product.discreption}
-                          </div>
+                  searchResults.map((product) => {
+                    // Determine image src
+                    let imgSrc = product.cover_Image;
+                    if (!imgSrc && Array.isArray(product.images) && product.images.length > 0) {
+                      const firstImg = product.images[0];
+                      if (typeof firstImg === 'object' && firstImg !== null && firstImg.url) {
+                        imgSrc = firstImg.url;
+                      } else if (typeof firstImg === 'string') {
+                        imgSrc = firstImg;
+                      }
+                    }
+                    // Ensure full URL if needed
+                    if (imgSrc && !imgSrc.startsWith('http')) {
+                      imgSrc = `${import.meta.env.VITE_IMAGEURL}${imgSrc}`;
+                    }
+                    return (
+                      <div
+                        key={product._id || product.id}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center"
+                        onClick={() => handleProductClick(product._id || product.id)}
+                      >
+                        {imgSrc && (
+                          <img
+                            src={imgSrc}
+                            alt={product.name}
+                            className="w-10 h-10 object-cover rounded mr-3"
+                          />
                         )}
+                        <div>
+                          <div className="font-medium text-gray-900">{product.name}</div>
+                          <div className="text-sm text-gray-500">${product.price}</div>
+                          {product.discreption && (
+                            <div className="text-xs text-gray-400 mt-1 line-clamp-2">
+                              {product.discreption}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    );
+                  })
                 ) : (
                   <div className="px-4 py-3 text-center text-gray-500">
                     No products found matching "{searchQuery}"

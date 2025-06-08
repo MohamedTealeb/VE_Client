@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Navbar from '../../Component/Shared/Navbar';
 import Footer from '../../Component/Shared/Footer';
@@ -9,6 +9,7 @@ import { fetchCategories, getAllCategories } from '../../Apis/Category_Api/Categ
 import './Product.css';
 import { addToCart } from '../../store/slices/orderSlice';
 import toast from 'react-hot-toast';
+import Product_Det from './Product_Det';
 
 export default function Product() {
   const navigate = useNavigate();
@@ -18,11 +19,8 @@ export default function Product() {
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
   const imageBaseUrl = import.meta.env.VITE_IMAGEURL;
-  const getImageUrl = (image) => {
-    if (!image) return null;
-    const imagePath = image.startsWith('/') ? image : `/${image}`;
-    return image.startsWith('http') ? image : `${imageBaseUrl}${imagePath}`;
-  };
+  const [searchParams] = useSearchParams();
+  const selectedProductId = searchParams.get('id');
 
   // Get categories from Redux store
   const { categories, loading: categoriesLoading } = useSelector((state) => state.category);
@@ -192,32 +190,35 @@ export default function Product() {
         </div>
       </div>
 
-      {/* Product Grid */}
-      <section className="py-12 bg-gradient-to-b from-white to-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {displayProducts.length > 0 ? (
-            <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-              {displayProducts.map((product) => {
-                console.log('Product being rendered:', product); // Debug log
-                return (
-                  <ProductCard 
-                    key={product.id || product._id}
-                    id={product.id || product._id}
-                    title={product.title}
-                    price={product.price}
-                    cover_Image={product.cover_Image}
-                    discreption={product.discreption}
-                  />
-                );
-              })}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No products found in this category</p>
-            </div>
-          )}
-        </div>
-      </section>
+      {/* Product Details or Product Grid */}
+      {selectedProductId ? (
+        <Product_Det id={selectedProductId} />
+      ) : (
+        <section className="py-12 bg-gradient-to-b from-white to-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {displayProducts.length > 0 ? (
+              <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+                {displayProducts.map((product) => {
+                  return (
+                    <ProductCard 
+                      key={product.id || product._id}
+                      id={product.id || product._id}
+                      title={product.title}
+                      price={product.price}
+                      cover_Image={product.cover_Image}
+                      discreption={product.discreption}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-gray-500 text-lg">No products found in this category</p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       <Footer />
     </div>
@@ -264,14 +265,11 @@ function ProductCard({ id, title, price, cover_Image, discreption }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const imageBaseUrl = import.meta.env.VITE_IMAGEURL;
-
-  // Define getImageUrl here
   const getImageUrl = (image) => {
     if (!image) return null;
     const imagePath = image.startsWith('/') ? image : `/${image}`;
     return image.startsWith('http') ? image : `${imageBaseUrl}${imagePath}`;
   };
-
   const handleAddToCart = () => {
     dispatch(addToCart(id))
       .unwrap()
@@ -296,33 +294,33 @@ function ProductCard({ id, title, price, cover_Image, discreption }) {
         });
       });
   };
-
-  const handleImageClick = () => {
+  const handleQuickView = () => {
     if (!id) {
       toast.error('Product ID is missing');
       return;
     }
-    console.log('Navigating to product with ID:', id); // Debug log
-    navigate(`/product_det/${id}`);
+    navigate(`/product_det?id=${id}`);
   };
-
   const imgSrc = getImageUrl(cover_Image);
-
   return (
-    <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300">
+    <div 
+      className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer"
+      onClick={handleQuickView}
+    >
       <div className="relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-xl bg-gray-200">
         <div className="relative h-64 w-full overflow-hidden">
           <img
             src={imgSrc}
             alt={title}
-            className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-110 cursor-pointer"
-            onClick={handleImageClick}
+            className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <button 
-              onClick={handleImageClick}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleQuickView();
+              }}
               className="transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white/90 hover:bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium shadow-lg"
             >
               Quick View
@@ -330,24 +328,22 @@ function ProductCard({ id, title, price, cover_Image, discreption }) {
           </div>
         </div>
       </div>
-      
       <div className="p-4">
         <div className="flex justify-between items-start">
           <div>
-            <h3 
-              className="text-lg font-medium text-gray-900 group-hover:text-purple-600 transition-colors duration-300 cursor-pointer"
-              onClick={handleImageClick}
-            >
+            <h3 className="text-lg font-medium text-gray-900 group-hover:text-purple-600 transition-colors duration-300">
               {title}
             </h3>
             <p className="mt-1 text-sm text-gray-500 line-clamp-2">{discreption}</p>
           </div>
         </div>
-
         <div className="mt-4 flex items-center justify-between">
           <p className="text-lg font-bold text-gray-900">${price}</p>
           <button 
-            onClick={handleAddToCart}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToCart();
+            }}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 transform hover:scale-105"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

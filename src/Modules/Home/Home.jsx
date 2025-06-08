@@ -59,8 +59,11 @@ export default function Home() {
     fetchLatestProducts();
   }, []);
 
-  const handleProductClick = (id) => {
-    navigate(`/product_det/${id}`);
+  const handleProductClick = (productId) => {
+    setSearchQuery('');
+    setSearchResults([]);
+    setShowSearch(false);
+    navigate(`/product_det?id=${productId}`);
   };
 
   return <>

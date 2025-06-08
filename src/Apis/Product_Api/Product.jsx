@@ -73,9 +73,18 @@ export const getAllProducts = async (params = {}) => {
 export const getProductById = async (id) => {
   try {
     console.log('Fetching product with ID:', id); // Debug log
-    const response = await api.get(`/products/${id}`);
+    // Use query param instead of path param
+    const response = await api.get(`/products?id=${id}`);
     console.log('Product API Response:', response.data); // Debug log
-    return response.data;
+    let product;
+    if (Array.isArray(response.data)) {
+      product = response.data.find(p => p.id == id || p._id == id);
+    } else if (Array.isArray(response.data.data)) {
+      product = response.data.data.find(p => p.id == id || p._id == id);
+    } else {
+      product = response.data;
+    }
+    return product;
   } catch (error) {
     console.error('Product API Error:', error.response?.data || error.message);
     throw error.response?.data || error.message;
