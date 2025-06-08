@@ -31,7 +31,7 @@ export default function Product() {
         // Fetch products
         let productsResponse;
         if (selectedCategory) {
-          productsResponse = await getAllProducts({ categoryId: selectedCategory });
+          productsResponse = await getAllProducts({ category: selectedCategory });
         } else {
           productsResponse = await getAllProducts();
         }
@@ -53,8 +53,8 @@ export default function Product() {
   }, [dispatch, selectedCategory]);
 
   const handleCategoryChange = (e) => {
-    const categoryId = e.target.value;
-    setSelectedCategory(categoryId);
+    const categoryName = e.target.value;
+    setSelectedCategory(categoryName);
   };
 
   // Remove client-side filtering since we get filtered products from API
@@ -179,8 +179,8 @@ export default function Product() {
                 className="rounded-lg border-gray-300 py-2 pl-3 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white shadow-sm"
               >
                 <option key="all" value="">All Categories</option>
-                {categories && categories.filter(category => category && category._id).map((category, index) => (
-                  <option key={`category-${category._id || index}`} value={category._id}>
+                {categories && categories.filter(category => category && category.name).map((category, index) => (
+                  <option key={`category-${category.name || index}`} value={category.name}>
                     {category.name}
                   </option>
                 ))}
@@ -321,7 +321,7 @@ function ProductCard({ id, title, price, cover_Image, discreption }) {
                 e.stopPropagation();
                 handleQuickView();
               }}
-              className="transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white/90 hover:bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium shadow-lg"
+              className="transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white/90 hover:bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium shadow-lg cursor-pointer"
             >
               Quick View
             </button>
@@ -344,7 +344,7 @@ function ProductCard({ id, title, price, cover_Image, discreption }) {
               e.stopPropagation();
               handleAddToCart();
             }}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 transform hover:scale-105"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 transform hover:scale-105 cursor-pointer"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />

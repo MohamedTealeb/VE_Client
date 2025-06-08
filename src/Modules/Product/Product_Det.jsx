@@ -216,13 +216,13 @@ export default function Product_Det() {
               <div className="mt-6 flex gap-4">
                 <button
                   onClick={handleOrder}
-                  className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-xl text-lg font-medium hover:bg-blue-700 transition-colors duration-300"
+                  className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-xl text-lg font-medium hover:bg-blue-700 transition-colors duration-300 cursor-pointer"
                 >
                   Order Now
                 </button>
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-xl text-lg font-medium hover:bg-blue-50 transition-colors duration-300"
+                  className="flex-1 border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-xl text-lg font-medium hover:bg-blue-50 transition-colors duration-300 cursor-pointer"
                 >
                   Add to Cart
                 </button>

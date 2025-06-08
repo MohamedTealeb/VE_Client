@@ -79,10 +79,7 @@ function Navbar() {
   };
 
   const handleProductClick = (productId) => {
-    setSearchQuery('');
-    setSearchResults([]);
-    setShowSearch(false);
-    navigate(`/product/${productId}`);
+    navigate(`/product_det?id=${productId}`);
   };
 
   return <>
@@ -157,7 +154,7 @@ function Navbar() {
             {isLoggedIn ? (
               <div className="relative">
                 <button
-                  className="relative inline-block focus:outline-none group"
+                  className="relative inline-block focus:outline-none group cursor-pointer"
                   onClick={() => setProfileMenu((prev) => !prev)}
                   onBlur={() => setTimeout(() => setProfileMenu(false), 150)}
                 >
@@ -174,14 +171,14 @@ function Navbar() {
                   <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-lg z-20">
                     <a
                       href="/profile"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
                       onClick={() => setProfileMenu(false)}
                     >
                       Profile
                     </a>
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
                     >
                       Logout
                     </button>
@@ -191,7 +188,7 @@ function Navbar() {
             ) : (
               <button 
                 onClick={() => navigate('/login')}
-                className="text-sm font-medium text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors"
+                className="text-sm font-medium text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
               >
                 Login
               </button>
@@ -283,7 +280,7 @@ function Navbar() {
                 <li>
                   <button 
                     onClick={handleLogout}
-                    className="block w-full text-gray-700 hover:text-gray-900"
+                    className="block w-full text-gray-700 hover:text-gray-900 cursor-pointer"
                   >
                     Logout
                   </button>
@@ -296,7 +293,7 @@ function Navbar() {
                     navigate('/login');
                     setMenuOpen(false);
                   }}
-                  className="block w-full text-gray-700 hover:text-gray-900"
+                  className="block w-full text-gray-700 hover:text-gray-900 cursor-pointer"
                 >
                   Login
                 </button>

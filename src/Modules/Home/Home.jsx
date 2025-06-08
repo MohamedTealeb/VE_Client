@@ -60,9 +60,6 @@ export default function Home() {
   }, []);
 
   const handleProductClick = (productId) => {
-    setSearchQuery('');
-    setSearchResults([]);
-    setShowSearch(false);
     navigate(`/product_det?id=${productId}`);
   };
 
@@ -132,7 +129,7 @@ export default function Home() {
     <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Latest Drops</h2>
     <button 
       onClick={() => navigate('/product')}
-      className="text-sm font-medium text-gray-600 hover:text-black transition-colors duration-300"
+      className="text-sm font-medium text-gray-600 hover:text-black transition-colors duration-300 cursor-pointer"
     >
       View All →
     </button>
@@ -146,12 +143,20 @@ export default function Home() {
             src={`${import.meta.env.VITE_IMAGEURL}${product.cover_Image}`}
             alt={product.title}
             className="w-full h-[400px] object-cover transform group-hover:scale-105 transition-transform duration-500 cursor-pointer"
-            onClick={() => handleProductClick(product._id)}
+            onClick={() => {
+              const productId = product._id || product.id;
+              handleProductClick(productId);
+            }}
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-          <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white text-black px-6 py-2 rounded-full text-sm font-medium opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-            Quick View
-          </button>
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button 
+              onClick={e => { e.stopPropagation(); handleProductClick(product._id || product.id); }}
+              className="transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-300 bg-white/90 hover:bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium shadow-lg cursor-pointer"
+            >
+              Quick View
+            </button>
+          </div>
         </div>
         <div className="mt-4 space-y-1">
           <h3 className="text-lg font-medium text-gray-900 group-hover:text-black transition-colors duration-300">{product.title}</h3>
