@@ -91,48 +91,41 @@ export default function Product_Det() {
           <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 flex flex-col md:flex-row gap-8">
             {/* Product Image */}
             <div className="flex-1 flex flex-col items-center">
-              {product.stock === 0 && (
-                <div className="w-full max-w-xs mb-4">
-                  <span className="text-white text-2xl font-bold bg-red-600 px-6 py-2 rounded-lg block text-center">Sold Out</span>
-                </div>
-              )}
-              <div className="relative">
+              <div className="relative w-80 mb-4">
+                {product.stock === 0 && (
+                  <div className="absolute top-2 left-2 z-10">
+                    <span className="text-white text-sm font-bold bg-red-600 px-3 py-1 rounded-md">Sold Out</span>
+                  </div>
+                )}
                 <img
-                  className="w-full max-w-xs h-80 object-cover rounded-xl shadow"
+                  className="w-full h-80 object-cover rounded-xl shadow"
                   src={`${import.meta.env.VITE_IMAGEURL}${selectedImage || product.cover_Image}`}
                   alt={product.name}
                 />
               </div>
               {/* Thumbnails */}
               <div className="flex gap-4 mt-4 justify-center">
-                {/* Main Image Thumbnail */}
                 <img
                   src={`${import.meta.env.VITE_IMAGEURL}${product.cover_Image}`}
                   alt="Main product image"
-                  className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 ${
-                    (!selectedImage || selectedImage === product.cover_Image) ? 'border-blue-500' : 'border-gray-200'
-                  }`}
+                  className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 ${(!selectedImage || selectedImage === product.cover_Image) ? 'border-blue-500' : 'border-gray-200'}`}
                   onClick={() => setSelectedImage(product.cover_Image)}
                 />
-                {/* Second Image Thumbnail */}
                 {product.images && product.images.length > 0 && product.images[0] && (
                   <img
                     src={`${import.meta.env.VITE_IMAGEURL}${product.images[0].url}`}
                     alt="Second product image"
-                    className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 ${
-                      selectedImage === product.images[0].url ? 'border-blue-500' : 'border-gray-200'
-                    }`}
+                    className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 ${selectedImage === product.images[0].url ? 'border-blue-500' : 'border-gray-200'}`}
                     onClick={() => setSelectedImage(product.images[0].url)}
                   />
                 )}
               </div>
             </div>
-
             {/* Product Details */}
-            <div className="flex-1 flex flex-col justify-between">
+            <div className="flex-1 flex flex-col justify-between max-w-md p-4">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
-                <p className="text-lg text-gray-700 mb-4">{product.discreption}</p>
+                <p className="text-lg text-gray-700 mb-4 break-words whitespace-pre-line w-full min-h-[96px]">{product.discreption}</p>
                 <div className="mb-4 flex items-center gap-6">
                   <span className="text-2xl font-bold text-blue-600">${product.price}</span>
                   <span className="text-sm text-gray-500">Stock: {product.stock}</span>
@@ -228,14 +221,12 @@ export default function Product_Det() {
                   </div>
                 </div>
               </div>
-              <div className="mt-6 flex gap-4">
-                <button
-                  onClick={handleOrder}
-                  className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-xl text-lg font-medium hover:bg-blue-700 transition-colors duration-300 cursor-pointer"
-                >
-                  Order Now
-                </button>
-              </div>
+              <button
+                onClick={handleOrder}
+                className="w-full bg-blue-600 text-white px-6 py-3 rounded-xl text-lg font-medium hover:bg-blue-700 transition-colors duration-300 cursor-pointer mt-4"
+              >
+                Order Now
+              </button>
             </div>
           </div>
         </div>

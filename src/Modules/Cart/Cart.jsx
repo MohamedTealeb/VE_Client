@@ -24,7 +24,7 @@ export default function Cart() {
       setLoading(true);
       orderApi.getOrdersMe()
         .then((data) => setOrders(data))
-        .catch(() => toast.error('فشل في تحميل الأوردرات'))
+        .catch(() => toast.error('Failed to load orders'))
         .finally(() => setLoading(false));
     }
   }, [product]);
@@ -114,10 +114,10 @@ export default function Cart() {
       setPhone('');
       setQuantity(1);
       
-      toast.success('تم تحديث الأوردر بنجاح');
+      toast.success('Order updated successfully!');
     } catch (error) {
       console.error('Order update error:', error);
-      toast.error(error.message || 'فشل في تحديث الأوردر. حاول مرة أخرى.');
+      toast.error(error.message || 'Failed to update order. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -159,9 +159,9 @@ export default function Cart() {
             </div>
           ) : (
             loading ? (
-              <div>جاري التحميل...</div>
+              <div>Loading...</div>
             ) : orders.length === 0 ? (
-              <div>لا يوجد أوردرات.</div>
+              <div>No orders found.</div>
             ) : (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -212,25 +212,25 @@ export default function Cart() {
                           {/* بيانات الأوردر */}
                           <div className="flex flex-col gap-1 text-gray-600 text-sm">
                             <span>
-                              <span className="font-semibold">رقم الأوردر:</span> {order.id}
+                              <span className="font-semibold">Order ID:</span> {order.id}
                             </span>
                             <span>
-                              <span className="font-semibold">الكمية:</span> {order.quantity}
+                              <span className="font-semibold">Quantity:</span> {order.quantity}
                             </span>
                             <span>
-                              <span className="font-semibold">العنوان:</span> {order.address}
+                              <span className="font-semibold">Address:</span> {order.address}
                             </span>
                             <span>
-                              <span className="font-semibold">الموبايل:</span> {order.phone}
+                              <span className="font-semibold">Phone:</span> {order.phone}
                             </span>
                             <span>
-                              <span className="font-semibold">السعر:</span> {order.product?.price ? `${order.product.price} ج.م` : '--'}
+                              <span className="font-semibold">Price:</span> {order.product?.price ? `$${order.product.price}` : '--'}
                             </span>
                             <span>
-                              <span className="font-semibold">الإجمالي:</span> {order.total ? `${order.total} ج.م` : '--'}
+                              <span className="font-semibold">Total:</span> {order.total ? `$${order.total}` : '--'}
                             </span>
                             <span>
-                              <span className="font-semibold">تاريخ الإنشاء:</span> {order.createdAt ? new Date(order.createdAt).toLocaleString('ar-EG') : '--'}
+                              <span className="font-semibold">Created At:</span> {order.createdAt ? new Date(order.createdAt).toLocaleString('en-US') : '--'}
                             </span>
                           </div>
 
@@ -273,14 +273,14 @@ export default function Cart() {
                 {showDeleteDialog && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
                     <div className="bg-white rounded-xl shadow-lg p-8 max-w-sm w-full text-center">
-                      <h2 className="text-lg font-bold mb-4 text-gray-800">تأكيد حذف الأوردر</h2>
-                      <p className="mb-6 text-gray-600">هل أنت متأكد أنك تريد حذف هذا الأوردر؟ لا يمكن التراجع عن هذه العملية.</p>
+                      <h2 className="text-lg font-bold mb-4 text-gray-800">Delete Order Confirmation</h2>
+                      <p className="mb-6 text-gray-600">Are you sure you want to delete this order? This action cannot be undone.</p>
                       <div className="flex gap-4 justify-center">
                         <button
                           className="px-6 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition-colors"
                           onClick={() => { setShowDeleteDialog(false); setOrderToDelete(null); }}
                         >
-                          إلغاء
+                          Cancel
                         </button>
                         <button
                           className="px-6 py-2 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600 transition-colors"
@@ -290,13 +290,13 @@ export default function Cart() {
                               setOrders((prev) => prev.filter((o) => (o.id || o._id) !== (orderToDelete.id || orderToDelete._id)));
                               setShowDeleteDialog(false);
                               setOrderToDelete(null);
-                              toast.success('تم حذف الأوردر بنجاح');
+                              toast.success('Order deleted successfully!');
                             } catch (err) {
-                              toast.error('حدث خطأ أثناء الحذف');
+                              toast.error('An error occurred while deleting the order.');
                             }
                           }}
                         >
-                          حذف
+                          Delete
                         </button>
                       </div>
                     </div>

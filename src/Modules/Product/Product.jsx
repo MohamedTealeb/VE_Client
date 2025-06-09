@@ -170,7 +170,7 @@ export default function Product() {
       </div>
 
       {/* Category Filter Section */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <div className="bg-white border-b border-gray-200  top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center space-x-4">
@@ -198,7 +198,7 @@ export default function Product() {
         <section className="py-12 bg-gradient-to-b from-white to-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {displayProducts.length > 0 ? (
-              <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {displayProducts.map((product) => {
                   return (
                     <ProductCard 
@@ -272,25 +272,12 @@ function ProductCard({ id, title, price, cover_Image, discreption, stock }) {
     const imagePath = image.startsWith('/') ? image : `/${image}`;
     return image.startsWith('http') ? image : `${imageBaseUrl}${imagePath}`;
   };
-  const handleAddToCart = async () => {
+  const handleOrder = async () => {
     if (stock === 0) {
       toast.error('This product is sold out');
       return;
     }
-    const address = prompt('Enter your address:');
-    const phone = prompt('Enter your phone:');
-    if (!address || !phone) return;
-    try {
-      await orderApi.createOrder({
-        productId: id || _id,
-        quantity: 1,
-        address,
-        phone,
-      });
-      toast.success('Order created successfully!');
-    } catch (error) {
-      toast.error('Failed to create order');
-    }
+    navigate('/cart', { state: { product: { id, title, price, cover_Image, discreption }, quantity: 1 } });
   };
   const handleQuickView = () => {
     if (!id) {
@@ -302,16 +289,16 @@ function ProductCard({ id, title, price, cover_Image, discreption, stock }) {
   const imgSrc = getImageUrl(cover_Image);
   return (
     <div 
-      className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer"
+      className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer w-full max-w-xs mx-auto p-4"
       onClick={handleQuickView}
     >
       <div className="relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-xl bg-gray-200">
-        {stock === 0 && (
-          <div className="w-full mb-2">
-            <span className="text-white text-xl font-bold bg-red-600 px-4 py-2 rounded-lg block text-center">Sold Out</span>
-          </div>
-        )}
         <div className="relative h-64 w-full overflow-hidden">
+          {stock === 0 && (
+            <div className="absolute top-2 left-2 z-10">
+              <span className="text-white text-sm font-bold bg-red-600 px-3 py-1 rounded-md">Sold Out</span>
+            </div>
+          )}
           <img
             src={imgSrc}
             alt={title}
@@ -332,27 +319,27 @@ function ProductCard({ id, title, price, cover_Image, discreption, stock }) {
         </div>
       </div>
       <div className="p-4">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="text-lg font-medium text-gray-900 group-hover:text-purple-600 transition-colors duration-300">
-              {title}
-            </h3>
-            <p className="mt-1 text-sm text-gray-500 line-clamp-2">{discreption}</p>
-          </div>
+        <div className="flex flex-col items-start">
+          <h3 className="text-lg font-medium text-gray-900 group-hover:text-purple-600 transition-colors duration-300">
+            {title}
+          </h3>
+          <p className="mt-1 text-sm text-gray-500 break-words whitespace-pre-line w-full">
+            {discreption}
+          </p>
         </div>
         <div className="mt-4 flex items-center justify-between">
           <p className="text-lg font-bold text-gray-900">${price}</p>
           <button 
             onClick={(e) => {
               e.stopPropagation();
-              handleAddToCart();
+              handleOrder();
             }}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 transform hover:scale-105 cursor-pointer"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            Add to Cart
+            Order Now
           </button>
         </div>
       </div>
