@@ -116,7 +116,7 @@ function Navbar() {
           <img
             src={logo}
             alt="logo"
-            className="h-25 w-full"
+            className="h-25 w-[100px]"
           />
         </a>
 

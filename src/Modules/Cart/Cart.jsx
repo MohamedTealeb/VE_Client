@@ -18,6 +18,15 @@ export default function Cart() {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState(null);
   const [editingOrder, setEditingOrder] = useState(null);
+  const colorId = location.state?.colorId;
+  const sizeId = location.state?.sizeId;
+
+  const selectedColorObj = location.state?.selectedColor || product?.colors?.find(
+    c => c?.id === colorId || c?._id === colorId || c === colorId
+  );
+  const selectedSizeObj = location.state?.selectedSize || product?.sizes?.find(
+    s => s?.id === sizeId || s?._id === sizeId || s === sizeId
+  );
 
   useEffect(() => {
     if (!product) {
@@ -57,10 +66,24 @@ export default function Cart() {
         quantity: Number(quantity),
         address: address.trim(),
         phone: phone.trim(),
+        colorId: Number(colorId),
+        sizeId: Number(sizeId)
       };
 
+      // Validate the data before sending
+      if (!orderData.productId) {
+        throw new Error('Product ID is required');
+      }
+      if (!orderData.colorId || isNaN(orderData.colorId)) {
+        throw new Error('Color selection is required');
+      }
+      if (!orderData.sizeId || isNaN(orderData.sizeId)) {
+        throw new Error('Size selection is required');
+      }
+
       console.log('Submitting order with data:', orderData);
-      await orderApi.createOrder(orderData);
+      const response = await orderApi.createOrder(orderData);
+      console.log('Order creation response:', response);
       toast.success('Order created successfully!');
       navigate('/');
     } catch (error) {
@@ -136,7 +159,29 @@ export default function Cart() {
                 <div>
                   <h2 className="text-2xl font-bold mb-2">{product.name}</h2>
                   <p className="text-gray-700 mb-2">{product.discreption}</p>
-                  <p className="text-lg font-semibold text-blue-600 mb-2">${product.price}</p>
+                  {selectedColorObj && (
+                    <div className="text-gray-700 mb-2 flex items-center gap-2">
+                      <span className="font-semibold">Selected Color: </span>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="w-6 h-6 rounded-full border border-gray-300"
+                          style={{
+                            background: selectedColorObj.hex || selectedColorObj.color?.hex || selectedColorObj.color || '#ccc'
+                          }}
+                        />
+                        <span>
+                          {selectedColorObj.label || selectedColorObj.name || selectedColorObj.color?.label || selectedColorObj.color?.name || (typeof selectedColorObj === 'string' ? selectedColorObj : '')}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {selectedSizeObj && (
+                    <p className="text-gray-700 mb-2">
+                      <span className="font-semibold">Selected Size: </span>
+                      {selectedSizeObj.label || (selectedSizeObj.size && selectedSizeObj.size.label) || (typeof selectedSizeObj === 'string' ? selectedSizeObj : '')}
+                    </p>
+                  )}
+                  <p className="text-lg font-semibold text-blue-600 mb-2">LE {product.price} EGP</p>
                 </div>
               </div>
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -224,10 +269,10 @@ export default function Cart() {
                               <span className="font-semibold">Phone:</span> {order.phone}
                             </span>
                             <span>
-                              <span className="font-semibold">Price:</span> {order.product?.price ? `$${order.product.price}` : '--'}
+                              <span className="font-semibold">Price:</span> {order.product?.price ? `LE ${order.product.price} EGP` : '--'}
                             </span>
                             <span>
-                              <span className="font-semibold">Total:</span> {order.total ? `$${order.total}` : '--'}
+                              <span className="font-semibold">Total:</span> {order.total ? `LE ${order.total} EGP` : '--'}
                             </span>
                             <span>
                               <span className="font-semibold">Created At:</span> {order.createdAt ? new Date(order.createdAt).toLocaleString('en-US') : '--'}
@@ -239,10 +284,9 @@ export default function Cart() {
                             <span
                               className={`
                                 inline-block px-3 py-1 rounded-full text-xs font-bold
-                                ${order.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' : ''}
-                                ${order.status === 'COMPLETED' ? 'bg-green-100 text-green-700' : ''}
-                                ${order.status === 'CANCELLED' ? 'bg-red-100 text-red-700' : ''}
-                                ${!['PENDING','COMPLETED','CANCELLED'].includes(order.status) ? 'bg-gray-100 text-gray-700' : ''}
+                                ${order.status === 'DELIVERED' ? 'bg-green-100 text-green-700' : ''}
+                                ${order.status === 'CANCELLED' ? 'bg-red-600 text-white font-bold shadow-sm' : ''}
+                                ${!['DELIVERED', 'CANCELLED'].includes(order.status) ? 'bg-gray-100 text-gray-700' : ''}
                               `}
                             >
                               {order.status || '---'}
@@ -251,12 +295,6 @@ export default function Cart() {
 
                           {/* أزرار التعديل والحذف */}
                           <div className="flex gap-2 mt-4 justify-end">
-                            <button
-                              className="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-semibold transition-colors duration-200"
-                              onClick={() => handleEdit(order)}
-                            >
-                              Edit
-                            </button>
                             <button
                               className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold transition-colors duration-200"
                               onClick={() => { setOrderToDelete(order); setShowDeleteDialog(true); }}

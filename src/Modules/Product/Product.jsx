@@ -198,7 +198,7 @@ export default function Product() {
         <section className="py-12 bg-gradient-to-b from-white to-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {displayProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {displayProducts.map((product) => {
                   return (
                     <ProductCard 
@@ -327,8 +327,8 @@ function ProductCard({ id, title, price, cover_Image, discreption, stock }) {
             {discreption}
           </p>
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <p className="text-lg font-bold text-gray-900">${price}</p>
+        <div className="mt-4 flex flex-col items-start gap-2">
+          <p className="text-lg font-bold text-gray-900">LE {price} EGP</p>
           <button 
             onClick={(e) => {
               e.stopPropagation();

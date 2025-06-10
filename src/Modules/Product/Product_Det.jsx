@@ -4,7 +4,6 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../Component/Shared/Navbar';
 import { getProductById } from '../../Apis/Product_Api/Product';
 import toast from 'react-hot-toast';
-import { orderApi } from '../../Apis/orders/orderApi';
 
 export default function Product_Det() {
   const [searchParams] = useSearchParams();
@@ -15,6 +14,7 @@ export default function Product_Det() {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,9 +24,7 @@ export default function Product_Det() {
           toast.error('Product ID is missing');
           return;
         }
-        console.log('Fetching product with ID:', id); // Debug log
         const product = await getProductById(id);
-        console.log('Fetched product data:', product); // Debug log
         if (!product) {
           toast.error('Product not found');
           return;
@@ -34,10 +32,29 @@ export default function Product_Det() {
         setProduct(product);
         setSelectedImage(product.cover_Image);
         if (product.colors && product.colors.length > 0) {
-          setSelectedColor(product.colors[0]);
+          // خزن ال ID فقط
+          let firstColor = product.colors[0];
+          let colorId = '';
+          if (typeof firstColor === 'object' && firstColor !== null && typeof firstColor.color === 'object' && firstColor.color !== null) {
+            colorId = firstColor.id || firstColor._id || firstColor.color.id || firstColor.color._id || '';
+          } else if (typeof firstColor === 'object' && firstColor !== null) {
+            colorId = firstColor.id || firstColor._id || '';
+          } else {
+            colorId = firstColor;
+          }
+          setSelectedColor(`${colorId}`);
         }
         if (product.sizes && product.sizes.length > 0) {
-          setSelectedSize(product.sizes[0]);
+          let firstSize = product.sizes[0];
+          let sizeId = '';
+          if (typeof firstSize === 'object' && firstSize !== null && typeof firstSize.size === 'object' && firstSize.size !== null && typeof firstSize.size.label === 'string') {
+            sizeId = firstSize.id || firstSize._id || firstSize.size.id || firstSize.size._id || '';
+          } else if (typeof firstSize === 'object' && firstSize !== null && typeof firstSize.label === 'string') {
+            sizeId = firstSize.id || firstSize._id || '';
+          } else {
+            sizeId = firstSize;
+          }
+          setSelectedSize(`${sizeId}`);
         }
       } catch (error) {
         toast.error('Failed to load product details');
@@ -52,13 +69,58 @@ export default function Product_Det() {
 
   const handleIncrement = () => setQuantity((prev) => prev + 1);
   const handleDecrement = () => setQuantity((prev) => Math.max(1, prev - 1));
+
   const handleOrder = () => {
+    if (!selectedColor) {
+      setError("Please select a color.");
+      return;
+    }
+    if (!selectedSize) {
+      setError("Please select a size.");
+      return;
+    }
+    setError("");
     const token = localStorage.getItem('token');
     if (!token) {
       navigate('/login');
       return;
     }
-    navigate('/cart', { state: { product, quantity } });
+
+    // Find the complete color and size objects
+    const selectedColorObj = product.colors.find(c => {
+      let colorId = '';
+      if (typeof c === 'object' && c !== null && typeof c.color === 'object' && c.color !== null) {
+        colorId = c.id || c._id || c.color.id || c.color._id || '';
+      } else if (typeof c === 'object' && c !== null) {
+        colorId = c.id || c._id || '';
+      } else {
+        colorId = c;
+      }
+      return `${colorId}` === selectedColor;
+    });
+
+    const selectedSizeObj = product.sizes.find(s => {
+      let sizeId = '';
+      if (typeof s === 'object' && s !== null && typeof s.size === 'object' && s.size !== null && typeof s.size.label === 'string') {
+        sizeId = s.id || s._id || s.size.id || s.size._id || '';
+      } else if (typeof s === 'object' && s !== null && typeof s.label === 'string') {
+        sizeId = s.id || s._id || '';
+      } else {
+        sizeId = s;
+      }
+      return `${sizeId}` === selectedSize;
+    });
+
+    navigate('/cart', { 
+      state: { 
+        product, 
+        quantity, 
+        colorId: selectedColor,
+        sizeId: selectedSize,
+        selectedColor: selectedColorObj,
+        selectedSize: selectedSizeObj
+      } 
+    });
   };
 
   if (loading) {
@@ -127,51 +189,55 @@ export default function Product_Det() {
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
                 <p className="text-lg text-gray-700 mb-4 break-words whitespace-pre-line w-full min-h-[96px]">{product.discreption}</p>
                 <div className="mb-4 flex items-center gap-6">
-                  <span className="text-2xl font-bold text-blue-600">${product.price}</span>
+                  <span className="text-2xl font-bold text-blue-600">LE {product.price} EGP</span>
                   <span className="text-sm text-gray-500">Stock: {product.stock}</span>
                 </div>
+                {error && (
+                  <p className="text-red-500 font-semibold mb-2">{error}</p>
+                )}
                 {/* Colors */}
                 <div className="mb-4 flex items-center gap-4">
                   <span className="font-semibold text-gray-700">Color:</span>
                   <div className="flex gap-2">
                     {Array.isArray(product.colors) && product.colors.length > 0 ? (
                       product.colors.map((c, i) => {
-                        // Handle nested color object
+                        let colorValue, colorLabel, colorId;
                         if (typeof c === 'object' && c !== null && typeof c.color === 'object' && c.color !== null) {
-                          let colorValue = c.color.hex || c.color.color || '#ccc';
-                          let colorLabel = c.color.label || c.color.name || c.color.color || '';
-                          if (typeof colorValue !== 'string') colorValue = '#ccc';
-                          return (
-                            <span
-                              key={i}
-                              className="w-7 h-7 rounded-full border-2 border-gray-300"
-                              style={{ background: colorValue }}
-                              title={colorLabel}
-                            />
-                          );
+                          colorValue = c.color.hex || c.color.color || '#ccc';
+                          colorLabel = c.color.label || c.color.name || c.color.color || '';
+                          colorId = c.id || c._id || c.color.id || c.color._id;
                         } else if (typeof c === 'object' && c !== null) {
-                          let colorValue = c.hex || c.color || '#ccc';
-                          let colorLabel = c.label || c.name || c.color || '';
-                          if (typeof colorValue !== 'string') colorValue = '#ccc';
-                          return (
-                            <span
-                              key={i}
-                              className="w-7 h-7 rounded-full border-2 border-gray-300"
-                              style={{ background: colorValue }}
-                              title={colorLabel}
-                            />
-                          );
-                        } else if (typeof c === 'string') {
-                          return (
-                            <span
-                              key={i}
-                              className="w-7 h-7 rounded-full border-2 border-gray-300"
-                              style={{ background: c }}
-                              title={c}
-                            />
-                          );
+                          colorValue = c.hex || c.color || '#ccc';
+                          colorLabel = c.label || c.name || c.color || '';
+                          colorId = c.id || c._id;
+                        } else {
+                          colorValue = c;
+                          colorLabel = c;
+                          colorId = c;
                         }
-                        return null;
+
+                        const isSelected = selectedColor === `${colorId}`;
+                        return (
+                          <span
+                            key={i}
+                            className={`relative w-12 h-12 rounded-full border-2 cursor-pointer flex items-center justify-center ${isSelected ? 'border-blue-600 ring-2 ring-blue-300' : 'border-gray-300'}`}
+                            style={{ background: colorValue }}
+                            title={colorLabel}
+                            onClick={() => {
+                              if (selectedColor === `${colorId}`) {
+                                setSelectedColor('');
+                              } else {
+                                setSelectedColor(`${colorId}`);
+                              }
+                            }}
+                          >
+                            {isSelected && (
+                              <span className="absolute inset-0 flex items-center justify-center">
+                                <span className="text-white text-xl font-bold">✓</span>
+                              </span>
+                            )}
+                          </span>
+                        );
                       })
                     ) : (
                       <span className="text-gray-400">N/A</span>
@@ -184,36 +250,40 @@ export default function Product_Det() {
                   <div className="flex gap-2">
                     {Array.isArray(product.sizes) && product.sizes.length > 0 ? (
                       product.sizes.map((s, i) => {
-                        // Handle nested size object
-                        if (typeof s === 'object' && s !== null && typeof s.size === 'object' && s.size !== null && typeof s.size.label === 'string' && s.size.label) {
-                          return (
-                            <span
-                              key={i}
-                              className="px-3 py-1 rounded bg-gray-100 text-gray-800 border border-gray-300 text-xs font-medium"
-                            >
-                              {s.size.label}
-                            </span>
-                          );
-                        } else if (typeof s === 'object' && s !== null && typeof s.label === 'string' && s.label) {
-                          return (
-                            <span
-                              key={i}
-                              className="px-3 py-1 rounded bg-gray-100 text-gray-800 border border-gray-300 text-xs font-medium"
-                            >
-                              {s.label}
-                            </span>
-                          );
-                        } else if (typeof s === 'string' && s) {
-                          return (
-                            <span
-                              key={i}
-                              className="px-3 py-1 rounded bg-gray-100 text-gray-800 border border-gray-300 text-xs font-medium"
-                            >
-                              {s}
-                            </span>
-                          );
+                        let sizeLabel, sizeId;
+                        if (typeof s === 'object' && s !== null && typeof s.size === 'object' && s.size !== null && typeof s.size.label === 'string') {
+                          sizeLabel = s.size.label;
+                          sizeId = s.id || s._id || s.size.id || s.size._id;
+                        } else if (typeof s === 'object' && s !== null && typeof s.label === 'string') {
+                          sizeLabel = s.label;
+                          sizeId = s.id || s._id;
+                        } else if (typeof s === 'string') {
+                          sizeLabel = s;
+                          sizeId = s;
                         }
-                        return null;
+
+                        const isSelected = selectedSize === `${sizeId}`;
+                        return (
+                          <span
+                            key={i}
+                            className={`relative px-5 py-2 rounded cursor-pointer border text-base font-medium flex items-center justify-center ${isSelected ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-100 text-gray-800 border-gray-300'}`}
+                            style={{ minWidth: 56, minHeight: 40 }}
+                            onClick={() => {
+                              if (selectedSize === `${sizeId}`) {
+                                setSelectedSize('');
+                              } else {
+                                setSelectedSize(`${sizeId}`);
+                              }
+                            }}
+                          >
+                            {sizeLabel}
+                            {isSelected && (
+                              <span className="absolute -top-1 -right-1 bg-blue-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm">
+                                ✓
+                              </span>
+                            )}
+                          </span>
+                        );
                       })
                     ) : (
                       <span className="text-gray-400">N/A</span>

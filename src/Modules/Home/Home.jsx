@@ -146,7 +146,7 @@ export default function Home() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {displayedItems.map((product, index) => (
           <div key={product?._id || `product-${index}`} className="group">
             <div className="relative overflow-hidden rounded-lg bg-gray-100">
@@ -171,7 +171,7 @@ export default function Home() {
             </div>
             <div className="mt-4 space-y-1">
               <h3 className="text-lg font-medium text-gray-900 group-hover:text-black transition-colors duration-300">{product.title}</h3>
-              <p className="text-base font-semibold text-gray-700">${product.price}</p>
+              <p className="text-base font-semibold text-gray-700">LE {product.price} EGP</p>
             </div>
           </div>
         ))}
