@@ -272,12 +272,8 @@ function ProductCard({ id, title, price, cover_Image, discreption, stock }) {
     const imagePath = image.startsWith('/') ? image : `/${image}`;
     return image.startsWith('http') ? image : `${imageBaseUrl}${imagePath}`;
   };
-  const handleOrder = async () => {
-    if (stock === 0) {
-      toast.error('This product is sold out');
-      return;
-    }
-    navigate('/cart', { state: { product: { id, title, price, cover_Image, discreption }, quantity: 1 } });
+  const handleOrder = () => {
+    navigate(`/product_det?id=${id}`);
   };
   const handleQuickView = () => {
     if (!id) {
