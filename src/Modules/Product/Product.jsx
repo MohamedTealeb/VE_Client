@@ -262,7 +262,7 @@ function CompassIcon() {
   );
 }
 
-// Product Card Component
+
 function ProductCard({ id, title, price, cover_Image, discreption, stock }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
