@@ -190,7 +190,6 @@ export default function Product_Det() {
                 <p className="text-lg text-gray-700 mb-4 break-words whitespace-pre-line w-full min-h-[96px]">{product.discreption}</p>
                 <div className="mb-4 flex items-center gap-6">
                   <span className="text-2xl font-bold text-blue-600">LE {product.price} EGP</span>
-                  <span className="text-sm text-gray-500">Stock: {product.stock}</span>
                 </div>
                 {error && (
                   <p className="text-red-500 font-semibold mb-2">{error}</p>

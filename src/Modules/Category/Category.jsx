@@ -28,7 +28,7 @@ const Category = () => {
   }, [categories, imageBaseUrl]);
 
   const handleExploreCategory = (categoryId) => {
-    navigate(`/products?category=${categoryId}`);
+    navigate(`/product`);
   };
 
   return (

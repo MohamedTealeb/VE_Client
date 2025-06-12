@@ -1,6 +1,7 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useNavigate } from 'react-router-dom';
+import { MdStar, MdArrowForward } from 'react-icons/md';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
@@ -9,7 +10,8 @@ import img1 from '../../assets/WhatsApp Image 2025-06-09 at 02.45.36_fdc7fbc2.jp
 import img2 from '../../assets/WhatsApp Image 2025-06-09 at 02.45.36_c0691460.jpg';
 import img3 from '../../assets/WhatsApp Image 2025-06-09 at 02.45.36_3b55d0e2.jpg';
 import img4 from '../../assets/WhatsApp Image 2025-06-09 at 02.45.35_2aaa3c3a.jpg';
-import img5 from '../../assets/WhatsApp Image 2025-06-09 at 02.45.35_2aaa3c3a.jpg';
+import img5 from '../../assets/WhatsApp Image 2025-05-06 at 08.13.39_0895e5d0.jpg';
+
 
 import Navbar from './../../Component/Shared/Navbar';
 import '../Home/Home.css'
@@ -117,6 +119,28 @@ export default function Home() {
         </h2>
       </div>
 
+      {/* New Collection Section */}
+      <div className="mt-12 relative">
+        <div className="relative w-full h-[600px] overflow-hidden rounded-lg shadow-2xl group">
+          <img 
+            src={img5} 
+            alt="Collection Preview" 
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent">
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+              <button 
+                onClick={() => navigate('/product')}
+                className="px-8 py-4 text-lg font-bold rounded-full shadow transition-all duration-300 bg-gray-100 text-black group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:to-purple-500 group-hover:text-white group-hover:shadow-lg flex items-center gap-2"
+              >
+                <MdStar className="text-xl group-hover:text-white text-black transition-colors duration-300" />
+                View All Collection
+                <MdArrowForward className="text-xl group-hover:text-white text-black transition-colors duration-300" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <Footer />
