@@ -21,14 +21,8 @@ const Category = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  // Debug log for categories and imageBaseUrl
-  useEffect(() => {
-    console.log('Categories:', categories);
-    console.log('Image Base URL:', imageBaseUrl);
-  }, [categories, imageBaseUrl]);
-
   const handleExploreCategory = (categoryId) => {
-    navigate(`/products?category=${categoryId}`);
+    navigate(`/product`);
   };
 
   return (
@@ -119,15 +113,15 @@ const Category = () => {
                   style={{ animationDelay: `${0.2 + index * 0.1}s` }}
                 >
                   <div className="relative aspect-w-16 aspect-h-9 overflow-hidden rounded-t-xl">
-                  <img
-                    src={imgSrc || "https://placehold.co/400x300"}
-                    alt={cat.name}
+                    <img
+                      src={imgSrc || "https://placehold.co/400x300"}
+                      alt={cat.name}
                       className="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-500"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "https://placehold.co/400x300";
-                    }}
-                  />
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://placehold.co/400x300";
+                      }}
+                    />
                     {/* Overlay with gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     
@@ -145,15 +139,28 @@ const Category = () => {
                     </h2>
                     <p className="text-gray-600 line-clamp-2">{cat.description}</p>
                     
-                    {/* Explore Button */}
+                    {/* Enhanced Explore Button */}
                     <button 
                       onClick={() => handleExploreCategory(cat.id)}
-                      className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-300 transform hover:scale-105 cursor-pointer"
+                      className="mt-4 group relative inline-flex items-center px-6 py-3 text-sm font-medium rounded-full text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-105 cursor-pointer overflow-hidden"
                     >
-                      View Products
-                      <svg className="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                      </svg>
+                      <span className="relative z-10 flex items-center">
+                        <span className="mr-2">View Products</span>
+                        <svg 
+                          className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round" 
+                            strokeWidth="2" 
+                            d="M9 5l7 7-7 7" 
+                          />
+                        </svg>
+                      </span>
+                      <span className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                     </button>
                   </div>
                 </div>

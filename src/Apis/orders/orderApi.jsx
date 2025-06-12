@@ -33,24 +33,15 @@ export const orderApi = {
     // Create new order
     createOrder: async (orderData) => {
         try {
-            // Log the request data
-            console.log('Creating order with data:', orderData);
-            
-            // Ensure all required fields are present
-            if (!orderData.productId) throw new Error('Product ID is required');
-            if (!orderData.quantity) throw new Error('Quantity is required');
-            if (!orderData.address) throw new Error('Address is required');
-            if (!orderData.phone) throw new Error('Phone is required');
-
-            // Ensure quantity is a number
-            orderData.quantity = Number(orderData.quantity);
-
-            const response = await api.post('/orders', orderData);
-            console.log('Order created successfully:', response.data);
+            const response = await api.post('/orders', orderData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getAuthToken()}`
+                }
+            });
             return response.data;
         } catch (error) {
-            console.error('Error creating order:', error.response?.data || error.message);
-            throw error.response?.data || error.message;
+            throw handleApiError(error);
         }
     },
 

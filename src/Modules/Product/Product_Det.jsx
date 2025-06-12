@@ -32,7 +32,6 @@ export default function Product_Det() {
         setProduct(product);
         setSelectedImage(product.cover_Image);
         if (product.colors && product.colors.length > 0) {
-          // خزن ال ID فقط
           let firstColor = product.colors[0];
           let colorId = '';
           if (typeof firstColor === 'object' && firstColor !== null && typeof firstColor.color === 'object' && firstColor.color !== null) {
@@ -58,7 +57,6 @@ export default function Product_Det() {
         }
       } catch (error) {
         toast.error('Failed to load product details');
-        console.error('Error fetching product:', error);
       } finally {
         setLoading(false);
       }

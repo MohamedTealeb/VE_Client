@@ -81,13 +81,10 @@ export default function Cart() {
         throw new Error('Size selection is required');
       }
 
-      console.log('Submitting order with data:', orderData);
       const response = await orderApi.createOrder(orderData);
-      console.log('Order creation response:', response);
       toast.success('Order created successfully!');
       navigate('/');
     } catch (error) {
-      console.error('Order creation error:', error);
       toast.error(error.message || 'Failed to create order. Please try again.');
     } finally {
       setLoading(false);
@@ -139,7 +136,6 @@ export default function Cart() {
       
       toast.success('Order updated successfully!');
     } catch (error) {
-      console.error('Order update error:', error);
       toast.error(error.message || 'Failed to update order. Please try again.');
     } finally {
       setLoading(false);
