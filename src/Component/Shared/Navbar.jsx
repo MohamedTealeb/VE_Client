@@ -122,11 +122,11 @@ function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:block">
-          <ul className="flex space-x-6">
-            <li><a href="/product" className="text-gray-700 hover:text-gray-900">Product</a></li>
-            {/* <li><a href="/sale" className="text-gray-700 hover:text-gray-900">Sale</a></li> */}
-            <li><a href="/about" className="text-gray-700 hover:text-gray-900">About</a></li>
-            <li><a href="/category" className="text-gray-700 hover:text-gray-900">Category</a></li>
+          <ul className="flex space-x-6 font-bold text-lg">
+            <li><a href="/product" className="text-gray-700 hover:text-gray-900 font-bold text-lg">Product</a></li>
+            {/* <li><a href="/sale" className="text-gray-700 hover:text-gray-900 font-bold text-lg">Sale</a></li> */}
+            <li><a href="/about" className="text-gray-700 hover:text-gray-900 font-bold text-lg">About</a></li>
+            <li><a href="/category" className="text-gray-700 hover:text-gray-900 font-bold text-lg">Category</a></li>
           </ul>
         </nav>
 
@@ -152,43 +152,16 @@ function Navbar() {
           {/* Login Button or Profile Icon - Hidden on mobile */}
           <div className="hidden md:block">
             {isLoggedIn ? (
-              <div className="relative">
-                <button
-                  className="relative inline-block focus:outline-none group cursor-pointer"
-                  onClick={() => setProfileMenu((prev) => !prev)}
-                  onBlur={() => setTimeout(() => setProfileMenu(false), 150)}
-                >
-                  {/* Profile SVG */}
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-700 group-hover:text-gray-900 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                    My Profile
-                  </span>
-                </button>
-                {/* Dropdown menu */}
-                {profileMenu && (
-                  <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow-lg z-20">
-                    <a
-                      href="/profile"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => setProfileMenu(false)}
-                    >
-                      Profile
-                    </a>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
+              <button 
+                onClick={handleLogout}
+                className="text-lg font-bold text-red-600 hover:text-red-800 px-3 py-2 rounded-md hover:bg-red-100 transition-colors cursor-pointer"
+              >
+                Logout
+              </button>
             ) : (
               <button 
                 onClick={() => navigate('/login')}
-                className="text-sm font-medium text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
+                className="text-lg font-bold text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
               >
                 Login
               </button>
@@ -270,17 +243,16 @@ function Navbar() {
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
         <div className="md:hidden bg-white shadow px-4 py-3 flex flex-col items-center">
-          <ul className="space-y-3 text-center">
-            <li><a href="/product" className="block text-gray-700 hover:text-gray-900">Product</a></li>
-            <li><a href="/about" className="block text-gray-700 hover:text-gray-900">About</a></li>
-            <li><a href="/category" className="block text-gray-700 hover:text-gray-900">Category</a></li>
+          <ul className="space-y-3 text-center font-bold text-lg">
+            <li><a href="/product" className="block text-gray-700 hover:text-gray-900 font-bold text-lg">Product</a></li>
+            <li><a href="/about" className="block text-gray-700 hover:text-gray-900 font-bold text-lg">About</a></li>
+            <li><a href="/category" className="block text-gray-700 hover:text-gray-900 font-bold text-lg">Category</a></li>
             {isLoggedIn ? (
               <>
-                <li><a href="/profile" className="block text-gray-700 hover:text-gray-900">My Profile</a></li>
                 <li>
                   <button 
                     onClick={handleLogout}
-                    className="block w-full text-gray-700 hover:text-gray-900 cursor-pointer"
+                    className="block w-full text-red-600 hover:text-red-800 cursor-pointer font-bold text-lg hover:bg-red-100"
                   >
                     Logout
                   </button>
@@ -293,7 +265,7 @@ function Navbar() {
                     navigate('/login');
                     setMenuOpen(false);
                   }}
-                  className="block w-full text-gray-700 hover:text-gray-900 cursor-pointer"
+                  className="block w-full text-gray-700 hover:text-gray-900 cursor-pointer font-bold text-lg"
                 >
                   Login
                 </button>

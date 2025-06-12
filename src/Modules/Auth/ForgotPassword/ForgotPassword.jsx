@@ -84,11 +84,19 @@ const ForgotPassword = () => {
     setIsSubmitting(true);
 
     try {
+      console.log('Sending OTP request for email:', formData.email);
       const result = await dispatch(forgotPassword(formData.email)).unwrap();
-      toast.success('OTP sent successfully!');
-      setOtpSent(true);
+      console.log('OTP request response:', result);
+      
+      if (result) {
+        toast.success('OTP has been sent to your email');
+        setOtpSent(true);
+      } else {
+        toast.error('Failed to send OTP. Please try again.');
+      }
     } catch (error) {
-      toast.error(error.message || 'Failed to send OTP');
+      console.error('OTP request error:', error);
+      toast.error(error || 'Failed to send OTP. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -110,12 +118,37 @@ const ForgotPassword = () => {
         password: formData.password.trim()
       };
 
+      console.log('Sending reset password request:', {
+        ...formattedData,
+        password: '***'
+      });
+      
       const result = await dispatch(resetPassword(formattedData)).unwrap();
       
-      toast.success('Password reset successfully!');
-      navigate('/login');
+      console.log('Reset password response:', result);
+      
+      if (result.success || result.message === "Password reset successfully") {
+        toast.success('Password has been reset successfully');
+        navigate('/login');
+      } else {
+        toast.error(result.message || 'Failed to reset password');
+      }
     } catch (error) {
-      toast.error(error.message || 'Failed to reset password');
+      console.error('Reset password error:', error);
+      
+      if (error.includes('Invalid OTP')) {
+        toast.error('Invalid OTP. Please check the code and try again.');
+        setFormData(prev => ({ ...prev, otp: '' }));
+      } else if (error.includes('password')) {
+        toast.error('Invalid password format. Please ensure it meets the requirements.');
+        setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
+      } else if (error.includes('Network error')) {
+        toast.error('Network error. Please check your connection and try again.');
+      } else if (error.includes('All fields are required')) {
+        toast.error('Please fill in all fields');
+      } else {
+        toast.error(error || 'Failed to reset password. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }

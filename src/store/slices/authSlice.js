@@ -1,48 +1,7 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-// Login
-export const loginUser = createAsyncThunk(
-  'auth/login',
-  async ({ email, password }, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_BASEURL}/auth/login`, { email, password });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Login failed');
-    }
-  }
-);
-
-// Forgot Password
-export const forgotPassword = createAsyncThunk(
-  'auth/forgotPassword',
-  async (email, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_BASEURL}/auth/forgot-password`, { email });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to send OTP');
-    }
-  }
-);
-
-// Reset Password
-export const resetPassword = createAsyncThunk(
-  'auth/resetPassword',
-  async ({ email, otp, newPassword }, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_BASEURL}/auth/reset-password`, {
-        email,
-        otp,
-        newPassword
-      });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to reset password');
-    }
-  }
-);
+import { createSlice } from '@reduxjs/toolkit';
+import { loginUser } from '../../Apis/Auth/Login/Login_Api';
+import { forgotPassword } from '../../Apis/Auth/ForgotPassword/ForgotPassword_Api';
+import { resetPassword } from '../../Apis/Auth/ResetPassword/ResetPassword_Api';
 
 const initialState = {
   user: null,

@@ -44,6 +44,7 @@ export default function Product() {
 
         setLoading(false);
       } catch (err) {
+        console.error('Error fetching data:', err);
         setError(err.message || 'Failed to fetch data');
         setLoading(false);
       }
