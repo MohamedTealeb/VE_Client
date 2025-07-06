@@ -10,7 +10,7 @@ import './Product.css';
 import { addToCart } from '../../store/slices/orderSlice';
 import toast from 'react-hot-toast';
 import Product_Det from './Product_Det';
-import { orderApi } from '../../Apis/orders/orderApi';
+import { createOrder } from '../../Apis/orders/orderApi';
 
 export default function Product() {
   const navigate = useNavigate();
@@ -91,81 +91,23 @@ export default function Product() {
     <div className="min-h-screen bg-custom-background flex flex-col">
       <Navbar onLogout={handleLogout} />
       
-      {/* Hero Section with Enhanced Animation */}
-      <div className="relative bg-black py-20 overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute inset-0">
-          {/* Animated gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-black animate-gradient"></div>
-          
-          {/* Animated particles */}
-          <div className="absolute inset-0">
-            {[...Array(20)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-2 h-2 bg-white rounded-full animate-particle"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 5}s`,
-                  opacity: Math.random() * 0.5 + 0.2
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Enhanced blob animations */}
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-            <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-            <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-          </div>
-
-          {/* Animated lines */}
-          <div className="absolute inset-0">
-            {[...Array(5)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute h-px bg-gradient-to-r from-transparent via-white/30 to-transparent animate-line"
-                style={{
-                  top: `${20 + i * 15}%`,
-                  width: '100%',
-                  animationDelay: `${i * 0.5}s`
-                }}
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-extrabold text-white sm:text-5xl md:text-6xl animate-fade-in">
-              <span className="block animate-slide-up" style={{ animationDelay: '0.2s' }}>Discover Our</span>
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-gradient-x animate-pulse-slow">Premium Products</span>
-            </h1>
-            <p className="mt-3 max-w-md mx-auto text-base text-gray-300 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl animate-slide-up" style={{ animationDelay: '0.4s' }}>
-              Explore our collection of premium products
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Section */}
-      <div className="bg-custom-solid py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
-            {[
-              { label: 'Total Products', value: '1,234' },
-              { label: 'Happy Customers', value: '98%' },
-              { label: 'Global Shipping', value: '24/7' },
-              { label: 'Support', value: '24/7' }
-            ].map((stat, index) => (
-              <div key={index} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
-                <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
-                <p className="mt-2 text-sm text-gray-600">{stat.label}</p>
-              </div>
-            ))}
-          </div>
+      {/* Animated Hero Section with Catchy Slogan */}
+      <div className="relative bg-black py-20 flex items-center justify-center min-h-[320px]">
+        <div className="relative z-10 flex flex-col items-center text-center">
+          <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-2 text-center">
+            <span className="block tracking-widest">Wear</span>
+            <span className="block text-5xl md:text-7xl font-bold font-[cursive] text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 drop-shadow-lg animate-bounce">
+              Confidence
+            </span>
+            <span className="block tracking-widest mt-2">Own Your Look.</span>
+          </h1>
+          <p className="mt-2 text-base md:text-lg text-gray-300 mb-6 animate-fade-in-up delay-200">Fresh styles for the bold generation.</p>
+          <button
+            className="px-8 py-2 rounded-full bg-white text-black font-semibold text-lg shadow hover:bg-gray-200 transition-colors duration-200 animate-fade-in-up delay-300"
+            onClick={() => window.scrollTo({top: 500, behavior: 'smooth'})}
+          >
+            Shop Now
+          </button>
         </div>
       </div>
 
