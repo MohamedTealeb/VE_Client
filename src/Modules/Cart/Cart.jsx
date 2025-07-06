@@ -148,12 +148,12 @@ export default function Cart() {
 
   return <>
     <Navbar />
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12">
+    <div className="min-h-screen bg-custom-background py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">{product ? 'Checkout' : 'Your Shopping Cart'}</h1>
           {product ? (
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden p-8">
+            <div className="bg-custom-solid rounded-2xl shadow-xl overflow-hidden p-8">
               <div className="flex flex-col md:flex-row gap-8 mb-8">
                 <img src={`${import.meta.env.VITE_IMAGEURL}${product.cover_Image}`} alt={product.name} className="w-40 h-40 object-cover rounded-xl shadow" />
                 <div>

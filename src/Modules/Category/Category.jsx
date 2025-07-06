@@ -33,7 +33,7 @@ const Category = () => {
   
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
+    <div className="min-h-screen bg-custom-background flex flex-col">
       <Navbar />
       
       {/* Hero Section with Enhanced Animation */}
@@ -96,7 +96,7 @@ const Category = () => {
       </div>
 
       {/* Categories Section */}
-      <div className="py-20 bg-white">
+      <div className="py-20 bg-custom-solid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading && (
             <div className="flex justify-center items-center py-12">
@@ -116,7 +116,7 @@ const Category = () => {
               return (
                 <div 
                   key={cat.id} 
-                  className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 animate-fade-in"
+                  className="group relative bg-custom-solid rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 animate-fade-in"
                   style={{ animationDelay: `${0.2 + index * 0.1}s` }}
                 >
                   <div className="relative aspect-w-16 aspect-h-9 overflow-hidden rounded-t-xl">

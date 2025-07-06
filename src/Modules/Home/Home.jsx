@@ -52,8 +52,9 @@ export default function Home() {
   ];
 
   return <>
-    <Navbar />
-    <div className="relative w-full h-[600px] overflow-hidden">
+    <div className="min-h-screen bg-custom-background">
+      <Navbar />
+      <div className="relative w-full h-[600px] overflow-hidden">
       <Swiper
         modules={[Autoplay, Pagination, EffectFade]}
         spaceBetween={0}
@@ -143,6 +144,7 @@ export default function Home() {
       </div>
     </div>
 
-    <Footer />
+      <Footer />
+    </div>
   </>
 }

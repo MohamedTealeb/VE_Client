@@ -1,3 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-background: 253, 251, 247;
+  --gradient-background: linear-gradient(180deg, rgba(253, 251, 247, 1), rgba(241, 235, 226, 1) 100%);
+  --color-foreground: 60, 1, 80;
+  --color-background-contrast: 228, 200, 145;
+  --color-shadow: 253, 251, 247;
+  --color-button: 253, 251, 247;
+  --color-button-text: 60, 1, 80;
+  --color-secondary-button: 253, 251, 247;
+  --color-secondary-button-text: 60, 1, 80;
+  --color-link: 60, 1, 80;
+  --color-badge-foreground: 60, 1, 80;
+  --color-badge-background: 253, 251, 247;
+  --color-badge-border: 60, 1, 80;
+  --payment-terms-background-color: rgb(253 251 247);
+}
+
+body {
+  background: var(--gradient-background);
+  color: rgb(var(--color-foreground));
+}
+
+.bg-custom-background {
+  background: var(--gradient-background);
+}
+
+.bg-custom-solid {
+  background-color: rgb(var(--color-background));
+}

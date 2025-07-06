@@ -67,7 +67,7 @@ export default function Product() {
 
   if (loading || categoriesLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
+      <div className="min-h-screen bg-custom-background flex flex-col">
         <Navbar onLogout={handleLogout} />
         <div className="flex-1 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
@@ -78,7 +78,7 @@ export default function Product() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
+      <div className="min-h-screen bg-custom-background flex flex-col">
         <Navbar onLogout={handleLogout} />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-red-500">Error: {error}</div>
@@ -88,7 +88,7 @@ export default function Product() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
+    <div className="min-h-screen bg-custom-background flex flex-col">
       <Navbar onLogout={handleLogout} />
       
       {/* Hero Section with Enhanced Animation */}
@@ -151,7 +151,7 @@ export default function Product() {
       </div>
 
       {/* Stats Section */}
-      <div className="bg-white py-12">
+      <div className="bg-custom-solid py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
             {[
@@ -170,7 +170,7 @@ export default function Product() {
       </div>
 
       {/* Category Filter Section */}
-      <div className="bg-white border-b border-gray-200  top-0 z-10">
+      <div className="bg-custom-solid border-b border-gray-200  top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center space-x-4">
@@ -195,7 +195,7 @@ export default function Product() {
       {selectedProductId ? (
         <Product_Det id={selectedProductId} />
       ) : (
-        <section className="py-12 bg-gradient-to-b from-white to-gray-50">
+        <section className="py-12 bg-custom-background">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {displayProducts.length > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3">

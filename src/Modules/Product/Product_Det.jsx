@@ -127,7 +127,7 @@ export default function Product_Det() {
     return (
       <>
         <Navbar />
-        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center">
+        <div className="min-h-screen bg-custom-background flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
         </div>
       </>
@@ -138,7 +138,7 @@ export default function Product_Det() {
     return (
       <>
         <Navbar />
-        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center justify-center">
+        <div className="min-h-screen bg-custom-background flex items-center justify-center">
           <div className="text-red-500">Product not found</div>
         </div>
       </>
@@ -148,9 +148,9 @@ export default function Product_Det() {
   return (
     <>
       <Navbar />
-      <main className="bg-gradient-to-b from-gray-50 to-white py-12 min-h-screen">
+      <main className="bg-custom-background py-12 min-h-screen">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 flex flex-col md:flex-row gap-8">
+          <div className="max-w-4xl mx-auto bg-custom-solid rounded-2xl shadow-lg p-8 flex flex-col md:flex-row gap-8">
             {/* Product Image */}
             <div className="flex-1 flex flex-col items-center">
               <div className="relative w-80 mb-4">

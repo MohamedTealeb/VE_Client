@@ -6,7 +6,7 @@ import './About.css'
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-custom-background">
       <Navbar />
       
       {/* Hero Section */}
@@ -27,7 +27,7 @@ export default function About() {
       </div>
 
       {/* Our Story Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-custom-solid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
             <h2 className="text-base text-purple-600 font-semibold tracking-wide uppercase">Our Story</h2>
@@ -42,11 +42,11 @@ export default function About() {
       </section>
 
       {/* Mission & Values Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-custom-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {/* Mission */}
-            <div className="bg-white rounded-xl shadow-sm p-8">
+            <div className="bg-custom-solid rounded-xl shadow-sm p-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h3>
               <p className="text-gray-600">
                 To provide high-quality, stylish clothing that makes our customers feel confident and comfortable, while maintaining affordable prices and sustainable practices.
@@ -54,7 +54,7 @@ export default function About() {
             </div>
             
             {/* Values */}
-            <div className="bg-white rounded-xl shadow-sm p-8">
+            <div className="bg-custom-solid rounded-xl shadow-sm p-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Values</h3>
               <ul className="space-y-4 text-gray-600">
                 <li className="flex items-start">
@@ -80,7 +80,7 @@ export default function About() {
       </section>
 
       {/* Product Categories Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-custom-solid">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
@@ -93,7 +93,7 @@ export default function About() {
 
           <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {/* Category 1 */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-custom-solid rounded-xl shadow-sm overflow-hidden">
               <div className="aspect-w-3 aspect-h-2">
                 <img
                   className="object-cover"
@@ -111,7 +111,7 @@ export default function About() {
             </div>
 
             {/* Category 2 */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-custom-solid rounded-xl shadow-sm overflow-hidden">
               <div className="aspect-w-3 aspect-h-2">
                 <img
                   className="object-cover"
@@ -129,7 +129,7 @@ export default function About() {
             </div>
 
             {/* Category 3 */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-custom-solid rounded-xl shadow-sm overflow-hidden">
               <div className="aspect-w-3 aspect-h-2">
                 <img
                   className="object-cover"
@@ -150,7 +150,7 @@ export default function About() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-custom-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -159,7 +159,7 @@ export default function About() {
               { label: 'Quality Materials', value: 'Premium' },
               { label: 'Fast Shipping', value: '24/7' }
             ].map((stat, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 text-center shadow-sm">
+              <div key={index} className="bg-custom-solid rounded-xl p-6 text-center shadow-sm">
                 <p className="text-3xl font-bold text-purple-600">{stat.value}</p>
                 <p className="mt-2 text-sm text-gray-500">{stat.label}</p>
               </div>
