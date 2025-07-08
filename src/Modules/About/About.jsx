@@ -16,7 +16,7 @@ export default function About() {
           <div className="flex flex-col items-center gap-4">
             <div className="w-24 h-24 rounded-full bg-white/80 flex items-center justify-center shadow-lg border-4 border-white mb-2">
               <img src={logo} alt="RYO Logo" className="w-20 h-20 rounded-full object-cover" />
-            </div>
+        </div>
             <h1 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent drop-shadow-lg animate-fade-in">
               About <span className="font-black tracking-widest">RYO</span>
             </h1>
@@ -65,7 +65,7 @@ export default function About() {
               <div key={idx} className="bg-white/80 backdrop-blur rounded-2xl shadow-lg p-6 flex flex-col items-center text-center">
                 {val.icon}
                 <h4 className="text-lg font-semibold text-gray-900 mt-2">{val.label}</h4>
-              </div>
+            </div>
             ))}
           </div>
         </div>
@@ -94,11 +94,11 @@ export default function About() {
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                   <h3 className="text-lg font-bold text-white group-hover:text-yellow-300 transition-colors">T-Shirts</h3>
                   <p className="text-sm text-gray-200">Premium Quality</p>
-                </div>
+              </div>
               </div>
             </div>
             {/* Category 2 */}
-            
+
             {/* Category 3 */}
           </div>
         </div>

@@ -66,15 +66,15 @@ const Category = () => {
                   {/* Modern Category Image */}
                   <div className="flex justify-center mt-4">
                     <div className="relative w-40 h-40 rounded-2xl overflow-hidden shadow-lg border-4 border-white group-hover:scale-105 transition-transform duration-300 bg-gray-100">
-                      <img
+                  <img
                         src={imgSrc || "https://placehold.co/400x400"}
-                        alt={cat.name}
+                    alt={cat.name}
                         className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.onerror = null;
+                    onError={(e) => {
+                      e.target.onerror = null;
                           e.target.src = "https://placehold.co/400x400";
-                        }}
-                      />
+                    }}
+                  />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
                         <h2 className="text-lg font-bold text-white text-center">{cat.name}</h2>
                       </div>

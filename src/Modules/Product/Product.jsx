@@ -100,7 +100,7 @@ export default function Product() {
               Confidence
             </span>
             <span className="block tracking-widest mt-2">Own Your Look.</span>
-          </h1>
+            </h1>
           <p className="mt-2 text-base md:text-lg text-gray-300 mb-6 animate-fade-in-up delay-200">Fresh styles for the bold generation.</p>
           <button
             className="px-8 py-2 rounded-full bg-white text-black font-semibold text-lg shadow hover:bg-gray-200 transition-colors duration-200 animate-fade-in-up delay-300"
