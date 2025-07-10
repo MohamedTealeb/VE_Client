@@ -126,79 +126,79 @@ export default function Product_Det() {
   return (
     <>
       <Navbar />
-      <main className="bg-custom-background  py-12 min-h-screen">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto rounded-2xl shadow-2xl p-8 flex flex-col md:flex-row gap-8 bg-white/70 backdrop-blur-md border border-gray-200">
+      <main className="bg-custom-background py-4 sm:py-8 lg:py-12 min-h-screen">
+        <div className="container mx-auto px-3 sm:px-4 lg:px-6">
+          <div className="max-w-4xl mx-auto rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl p-4 sm:p-6 lg:p-8 flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8 bg-white/70 backdrop-blur-md border border-gray-200">
             {/* Product Image */}
             <div className="flex-1 flex flex-col items-center">
-              <div className="relative w-96 mb-4 transition-transform duration-300 hover:scale-105 drop-shadow-xl">
+              <div className="relative w-full max-w-sm sm:max-w-md lg:w-96 mb-4 transition-transform duration-300 hover:scale-105 drop-shadow-xl">
                 {product.stock === 0 && (
                   <div className="absolute top-2 left-2 z-10">
-                    <span className="text-white text-sm font-bold bg-red-600 px-3 py-1 rounded-md">Sold Out</span>
+                    <span className="text-white text-xs sm:text-sm font-bold bg-red-600 px-2 sm:px-3 py-1 rounded-md">Sold Out</span>
                   </div>
                 )}
                 <img
-                  className="w-full h-96 object-cover rounded-2xl shadow-lg"
+                  className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-xl sm:rounded-2xl shadow-lg"
                   src={`${import.meta.env.VITE_IMAGEURL}${selectedImage || product.cover_Image}`}
                   alt={product.name}
                 />
               </div>
               {/* Thumbnails */}
-              <div className="flex gap-4 mt-4 justify-center">
+              <div className="flex gap-2 sm:gap-4 mt-4 justify-center">
                 <img
                   src={`${import.meta.env.VITE_IMAGEURL}${product.cover_Image}`}
                   alt="Main product image"
-                  className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 ${(!selectedImage || selectedImage === product.cover_Image) ? 'border-blue-500' : 'border-gray-200'} transition-transform duration-200 hover:scale-105`}
+                  className={`w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg cursor-pointer border-2 ${(!selectedImage || selectedImage === product.cover_Image) ? 'border-blue-500' : 'border-gray-200'} transition-transform duration-200 hover:scale-105`}
                   onClick={() => setSelectedImage(product.cover_Image)}
                 />
                 {product.images && product.images.length > 0 && product.images[0] && (
                   <img
                     src={`${import.meta.env.VITE_IMAGEURL}${product.images[0].url}`}
                     alt="Second product image"
-                    className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 ${selectedImage === product.images[0].url ? 'border-blue-500' : 'border-gray-200'} transition-transform duration-200 hover:scale-105`}
+                    className={`w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg cursor-pointer border-2 ${selectedImage === product.images[0].url ? 'border-blue-500' : 'border-gray-200'} transition-transform duration-200 hover:scale-105`}
                     onClick={() => setSelectedImage(product.images[0].url)}
                   />
                 )}
               </div>
             </div>
             {/* Product Details */}
-            <div className="flex-1 flex flex-col justify-between max-w-md p-4">
+            <div className="flex-1 flex flex-col justify-between max-w-full lg:max-w-md p-2 sm:p-4">
               <div>
-                <h1 className="text-4xl font-extrabold text-gray-900 mb-2 tracking-tight leading-tight">{product.name}</h1>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-2 tracking-tight leading-tight">{product.name}</h1>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-2xl">⚧️</span>
-                  <h3 className="text-lg font-bold text-pink-600">
-                    Unisex <span className="text-gray-600 font-normal text-base ml-2">(For Men & Women)</span>
+                  <span className="text-xl sm:text-2xl">⚧️</span>
+                  <h3 className="text-base sm:text-lg font-bold text-pink-600">
+                    Unisex <span className="text-gray-600 font-normal text-sm sm:text-base ml-1 sm:ml-2">(For Men & Women)</span>
                   </h3>
                 </div>
-                <p className="text-lg text-gray-700 mb-4 break-words whitespace-pre-line w-full min-h-[96px]">{product.discreption}</p>
-                <div className="mb-4 flex items-center gap-6">
-                  <span className="text-3xl font-extrabold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">LE {product.price} EGP</span>
+                <p className="text-sm sm:text-base lg:text-lg text-gray-700 mb-4 break-words whitespace-pre-line w-full min-h-[60px] sm:min-h-[80px] lg:min-h-[96px]">{product.discreption}</p>
+                <div className="mb-4 flex items-center gap-4 sm:gap-6">
+                  <span className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">LE {product.price} EGP</span>
                 </div>
                 {/* اختيار الكمية */}
-                <div className="mb-6 flex items-center gap-4">
-                  <span className="font-semibold text-gray-700">Quantity:</span>
+                <div className="mb-4 sm:mb-6 flex items-center gap-3 sm:gap-4">
+                  <span className="font-semibold text-gray-700 text-sm sm:text-base">Quantity:</span>
                   <button
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-2xl font-bold hover:bg-blue-100 transition-colors shadow"
+                    className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-gray-200 text-lg sm:text-2xl font-bold hover:bg-blue-100 transition-colors shadow"
                     onClick={handleDecrement}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" /></svg>
                   </button>
-                  <span className="px-4 text-lg font-bold">{quantity}</span>
+                  <span className="px-3 sm:px-4 text-base sm:text-lg font-bold">{quantity}</span>
                   <button
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-200 text-2xl font-bold hover:bg-blue-100 transition-colors shadow"
+                    className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-gray-200 text-lg sm:text-2xl font-bold hover:bg-blue-100 transition-colors shadow"
                     onClick={handleIncrement}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
                   </button>
                 </div>
                 {error && (
-                  <p className="text-red-500 font-semibold mb-2">{error}</p>
+                  <p className="text-red-500 font-semibold mb-2 text-sm sm:text-base">{error}</p>
                 )}
                 {/* Colors */}
-                <div className="mb-10 flex items-center gap-4">
-                  <span className="font-semibold text-gray-700">Color:</span>
-                  <div className="flex gap-3">
+                <div className="mb-6 sm:mb-10 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                  <span className="font-semibold text-gray-700 text-sm sm:text-base">Color:</span>
+                  <div className="flex gap-2 sm:gap-3 flex-wrap">
                     {Array.isArray(product.colors) && product.colors.length > 0 ? (
                       product.colors.map((c, i) => {
                         let colorValue, colorLabel, colorId;
@@ -219,7 +219,7 @@ export default function Product_Det() {
                         return (
                           <span
                             key={i}
-                            className={`relative w-14 h-14 rounded-full border-4 cursor-pointer flex items-center justify-center transition-all duration-200 shadow-lg ${isSelected ? 'border-blue-600 ring-4 ring-blue-200 scale-110' : 'border-gray-300'}`}
+                            className={`relative w-10 h-10 sm:w-14 sm:h-14 rounded-full border-4 cursor-pointer flex items-center justify-center transition-all duration-200 shadow-lg ${isSelected ? 'border-blue-600 ring-4 ring-blue-200 scale-110' : 'border-gray-300'}`}
                             style={{ background: colorValue }}
                             title={colorLabel}
                             onClick={() => {
@@ -232,22 +232,22 @@ export default function Product_Det() {
                           >
                             {isSelected && (
                               <span className="absolute inset-0 flex items-center justify-center animate-bounce">
-                                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                <svg className="w-5 h-5 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                               </span>
                             )}
-                            <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-gray-700 font-semibold">{colorLabel}</span>
+                            <span className="absolute -bottom-5 sm:-bottom-6 left-1/2 -translate-x-1/2 text-xs text-gray-700 font-semibold">{colorLabel}</span>
                           </span>
                         );
                       })
                     ) : (
-                      <span className="text-gray-400">N/A</span>
+                      <span className="text-gray-400 text-sm sm:text-base">N/A</span>
                     )}
                   </div>
                 </div>
                 {/* Sizes */}
-                <div className="mb-6 flex items-center gap-4">
-                  <span className="font-semibold text-gray-700">Size:</span>
-                  <div className="flex gap-3">
+                <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                  <span className="font-semibold text-gray-700 text-sm sm:text-base">Size:</span>
+                  <div className="flex gap-2 sm:gap-3 flex-wrap">
                     {Array.isArray(product.sizes) && product.sizes.length > 0 ? (
                       product.sizes.map((s, i) => {
                         let sizeLabel, sizeId;
@@ -265,8 +265,8 @@ export default function Product_Det() {
                         return (
                           <span
                             key={i}
-                            className={`relative px-7 py-3 rounded-xl cursor-pointer border text-lg font-semibold flex items-center justify-center transition-all duration-200 shadow-lg ${isSelected ? 'bg-blue-600 text-white border-blue-600 scale-105' : 'bg-gray-100 text-gray-800 border-gray-300'}`}
-                            style={{ minWidth: 64, minHeight: 48 }}
+                            className={`relative px-4 sm:px-7 py-2 sm:py-3 rounded-lg sm:rounded-xl cursor-pointer border text-sm sm:text-lg font-semibold flex items-center justify-center transition-all duration-200 shadow-lg ${isSelected ? 'bg-blue-600 text-white border-blue-600 scale-105' : 'bg-gray-100 text-gray-800 border-gray-300'}`}
+                            style={{ minWidth: 48, minHeight: 36 }}
                             onClick={() => {
                               if (selectedSize === `${sizeId}`) {
                                 setSelectedSize('');
@@ -277,7 +277,7 @@ export default function Product_Det() {
                           >
                             {sizeLabel}
                             {isSelected && (
-                              <span className="absolute -top-2 -right-2 bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-base animate-bounce">
+                              <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-blue-600 text-white rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-xs sm:text-base animate-bounce">
                                 ✓
                               </span>
                             )}
@@ -285,25 +285,25 @@ export default function Product_Det() {
                         );
                       })
                     ) : (
-                      <span className="text-gray-400">N/A</span>
+                      <span className="text-gray-400 text-sm sm:text-base">N/A</span>
                     )}
                   </div>
                 </div>
               </div>
               <button
                 onClick={handleOrder}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-white px-6 py-4 rounded-2xl text-xl font-bold shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer mt-4"
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-lg sm:text-xl font-bold shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer mt-4"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-7 sm:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                 Order Now
               </button>
               {/* رسالة تحذيرية محسنة */}
               <div
-                className="mt-6 flex items-start gap-3 bg-yellow-50 border-l-8 border-yellow-400 text-yellow-900 p-4 rounded-xl text-base shadow"
+                className="mt-4 sm:mt-6 flex items-start gap-2 sm:gap-3 bg-yellow-50 border-l-4 sm:border-l-8 border-yellow-400 text-yellow-900 p-3 sm:p-4 rounded-lg sm:rounded-xl text-sm sm:text-base shadow"
                 style={{ direction: 'rtl', textAlign: 'right' }}
               >
-                <span className="mt-1">
-                  <svg className="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span className="mt-0.5 sm:mt-1">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="10" strokeWidth="2" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01" />
                   </svg>

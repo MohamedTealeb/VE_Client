@@ -65,7 +65,7 @@ const Category = () => {
                 >
                   {/* Modern Category Image */}
                   <div className="flex justify-center mt-4">
-                    <div className="relative w-40 h-40 rounded-2xl overflow-hidden shadow-lg border-4 border-white group-hover:scale-105 transition-transform duration-300 bg-gray-100">
+                    <div className="relative w-56 h-56 rounded-2xl overflow-hidden shadow-lg border-4 border-white group-hover:scale-105 transition-transform duration-300 bg-gray-100">
                   <img
                         src={imgSrc || "https://placehold.co/400x400"}
                     alt={cat.name}
