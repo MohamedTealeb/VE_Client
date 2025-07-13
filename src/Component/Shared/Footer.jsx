@@ -130,7 +130,7 @@ export default function Footer() {
           </div>
 
           {/* Navigation Links */}
-          <div className="space-y-4">
+          <div className="space-y-4 text-center ">
             <h3 className="text-lg font-semibold text-white">Quick Links</h3>
             <ul className="space-y-2">
               {[
@@ -144,7 +144,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-sm hover:text-white transition-colors"
+                    className="text-sm hover:text-white underline  transition-colors"
                   >
                     {link.label}
                   </a>

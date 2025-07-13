@@ -5,6 +5,7 @@ import Navbar from '../../Component/Shared/Navbar';
 import { getProductById } from '../../Apis/Product_Api/Product';
 import toast from 'react-hot-toast';
 import { addToCart } from '../../Apis/cart/cart';
+import { getAllProducts } from '../../Apis/Product_Api/Product';
 
 export default function Product_Det() {
   const [searchParams] = useSearchParams();
@@ -17,6 +18,7 @@ export default function Product_Det() {
   const [selectedSize, setSelectedSize] = useState('');
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [relatedProducts, setRelatedProducts] = useState([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -67,6 +69,25 @@ export default function Product_Det() {
 
     fetchProduct();
   }, [id]);
+
+  useEffect(() => {
+    // جلب المنتجات ذات الصلة
+    const fetchRelated = async () => {
+      try {
+        const all = await getAllProducts();
+        let productsArr = Array.isArray(all) ? all : all.data || [];
+        // استبعاد المنتج الحالي بمقارنة String
+        productsArr = productsArr.filter(
+          p => String(p._id || p.id) !== String(product?._id || product?.id)
+        );
+        console.log('Related products:', productsArr.slice(0, 4));
+        setRelatedProducts(productsArr.slice(0, 4));
+      } catch (e) {
+        setRelatedProducts([]);
+      }
+    };
+    if (product) fetchRelated();
+  }, [product]);
 
   const handleIncrement = () => setQuantity((prev) => prev + 1);
   const handleDecrement = () => setQuantity((prev) => Math.max(1, prev - 1));
@@ -196,9 +217,9 @@ export default function Product_Det() {
                   <p className="text-red-500 font-semibold mb-2 text-sm sm:text-base">{error}</p>
                 )}
                 {/* Colors */}
-                <div className="mb-6 sm:mb-10 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                  <span className="font-semibold text-gray-700 text-sm sm:text-base">Color:</span>
-                  <div className="flex gap-2 sm:gap-3 flex-wrap">
+                <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                  <span className="font-semibold text-gray-700 text-sm">Color:</span>
+                  <div className="flex gap-4 sm:gap-2 flex-wrap">
                     {Array.isArray(product.colors) && product.colors.length > 0 ? (
                       product.colors.map((c, i) => {
                         let colorValue, colorLabel, colorId;
@@ -219,7 +240,7 @@ export default function Product_Det() {
                         return (
                           <span
                             key={i}
-                            className={`relative w-10 h-10 sm:w-14 sm:h-14 rounded-full border-4 cursor-pointer flex items-center justify-center transition-all duration-200 shadow-lg ${isSelected ? 'border-blue-600 ring-4 ring-blue-200 scale-110' : 'border-gray-300'}`}
+                            className={`relative w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 cursor-pointer flex items-center justify-center transition-all duration-200 shadow-md ${isSelected ? 'border-blue-600 ring-2 ring-blue-200 scale-110' : 'border-gray-300'}`}
                             style={{ background: colorValue }}
                             title={colorLabel}
                             onClick={() => {
@@ -232,22 +253,22 @@ export default function Product_Det() {
                           >
                             {isSelected && (
                               <span className="absolute inset-0 flex items-center justify-center animate-bounce">
-                                <svg className="w-5 h-5 sm:w-7 sm:h-7 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                               </span>
                             )}
-                            <span className="absolute -bottom-5 sm:-bottom-6 left-1/2 -translate-x-1/2 text-xs text-gray-700 font-semibold">{colorLabel}</span>
+                            <span className="absolute -bottom-4 sm:-bottom-3 left-1/2 -translate-x-1/2 text-xs text-gray-700 font-semibold">{colorLabel}</span>
                           </span>
                         );
                       })
                     ) : (
-                      <span className="text-gray-400 text-sm sm:text-base">N/A</span>
+                      <span className="text-gray-400 text-sm">N/A</span>
                     )}
                   </div>
                 </div>
                 {/* Sizes */}
-                <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                  <span className="font-semibold text-gray-700 text-sm sm:text-base">Size:</span>
-                  <div className="flex gap-2 sm:gap-3 flex-wrap">
+                <div className="mb-4 sm:mb-6 mt-9 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                  <span className="font-semibold text-gray-700 text-sm">Size:</span>
+                  <div className="flex gap-1 sm:gap-2 flex-wrap">
                     {Array.isArray(product.sizes) && product.sizes.length > 0 ? (
                       product.sizes.map((s, i) => {
                         let sizeLabel, sizeId;
@@ -265,8 +286,8 @@ export default function Product_Det() {
                         return (
                           <span
                             key={i}
-                            className={`relative px-4 sm:px-7 py-2 sm:py-3 rounded-lg sm:rounded-xl cursor-pointer border text-sm sm:text-lg font-semibold flex items-center justify-center transition-all duration-200 shadow-lg ${isSelected ? 'bg-blue-600 text-white border-blue-600 scale-105' : 'bg-gray-100 text-gray-800 border-gray-300'}`}
-                            style={{ minWidth: 48, minHeight: 36 }}
+                            className={`relative px-3 sm:px-4 py-1 sm:py-2 rounded-md sm:rounded-lg cursor-pointer border text-xs sm:text-sm font-semibold flex items-center justify-center transition-all duration-200 shadow-md ${isSelected ? 'bg-blue-600 text-white border-blue-600 scale-105' : 'bg-gray-100 text-gray-800 border-gray-300'}`}
+                            style={{ minWidth: 40, minHeight: 28 }}
                             onClick={() => {
                               if (selectedSize === `${sizeId}`) {
                                 setSelectedSize('');
@@ -277,7 +298,7 @@ export default function Product_Det() {
                           >
                             {sizeLabel}
                             {isSelected && (
-                              <span className="absolute -top-1 sm:-top-2 -right-1 sm:-right-2 bg-blue-600 text-white rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-xs sm:text-base animate-bounce">
+                              <span className="absolute -top-1 -right-1 bg-blue-600 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs animate-bounce">
                                 ✓
                               </span>
                             )}
@@ -285,7 +306,7 @@ export default function Product_Det() {
                         );
                       })
                     ) : (
-                      <span className="text-gray-400 text-sm sm:text-base">N/A</span>
+                      <span className="text-gray-400 text-sm">N/A</span>
                     )}
                   </div>
                 </div>
@@ -317,6 +338,25 @@ export default function Product_Det() {
               </div>
             </div>
           </div>
+          {/* Related Products inside the same card */}
+          {relatedProducts.length > 0 && (
+            <div className="max-w-4xl mx-auto rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl p-4 sm:p-6 lg:p-8 mt-4 bg-white/70 backdrop-blur-md border border-gray-200">
+              <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800">Related Products</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {relatedProducts.map((prod) => (
+                  <div key={prod._id || prod.id} className="bg-white rounded-lg shadow p-3 flex flex-col items-center cursor-pointer hover:shadow-lg transition" onClick={() => navigate(`/product_det?id=${prod._id || prod.id}`)}>
+                    <img
+                      src={`${import.meta.env.VITE_IMAGEURL}${prod.cover_Image}`}
+                      alt={prod.name || prod.title}
+                      className="w-32 h-32 object-cover rounded mb-2"
+                    />
+                    <div className="text-sm font-semibold text-gray-700 text-center line-clamp-2 mb-1">{prod.name || prod.title}</div>
+                    <div className="text-xs text-gray-500">LE {prod.price} EGP</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </>

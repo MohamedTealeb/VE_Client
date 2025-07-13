@@ -149,6 +149,7 @@ export default function Product() {
                       title={product.title}
                       price={product.price}
                       cover_Image={product.cover_Image}
+                      images={product.images}
                       discreption={product.discreption}
                       stock={product.stock}
                     />
@@ -205,18 +206,23 @@ function CompassIcon() {
 }
 
 
-function ProductCard({ id, title, price, cover_Image, discreption, stock }) {
+function ProductCard({ id, title, price, cover_Image, images, discreption, stock }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isHovering, setIsHovering] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const imageBaseUrl = import.meta.env.VITE_IMAGEURL;
+  
   const getImageUrl = (image) => {
     if (!image) return null;
     const imagePath = image.startsWith('/') ? image : `/${image}`;
     return image.startsWith('http') ? image : `${imageBaseUrl}${imagePath}`;
   };
+  
   const handleOrder = () => {
     navigate(`/product_det?id=${id}`);
   };
+  
   const handleQuickView = () => {
     if (!id) {
       toast.error('Product ID is missing');
@@ -224,11 +230,64 @@ function ProductCard({ id, title, price, cover_Image, discreption, stock }) {
     }
     navigate(`/product_det?id=${id}`);
   };
-  const imgSrc = getImageUrl(cover_Image);
+  
+  // Get all available images including cover image
+  const getAllImages = () => {
+    const imageUrls = [];
+    
+    // Add cover image first
+    if (cover_Image) {
+      imageUrls.push(getImageUrl(cover_Image));
+    }
+    
+    // Add additional images
+    if (images && Array.isArray(images)) {
+      images.forEach(image => {
+        if (typeof image === 'object' && image !== null && image.url) {
+          imageUrls.push(getImageUrl(image.url));
+        } else if (typeof image === 'string') {
+          imageUrls.push(getImageUrl(image));
+        }
+      });
+    }
+    
+    return imageUrls;
+  };
+  
+  const allImages = getAllImages();
+  
+  // Handle hover start
+  const handleMouseEnter = () => {
+    if (allImages.length > 1) {
+      setIsHovering(true);
+      setCurrentImageIndex(0);
+    }
+  };
+  
+  // Handle hover end
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    setCurrentImageIndex(0);
+  };
+  
+  // Auto-rotate images when hovering
+  useEffect(() => {
+    if (!isHovering || allImages.length <= 1) return;
+    
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === allImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 1000); // Change image every 1 second
+    
+    return () => clearInterval(interval);
+  }, [isHovering, allImages.length]);
   return (
     <div 
       className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer w-full max-w-xs mx-auto p-4"
       onClick={handleQuickView}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <div className="relative aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-xl bg-gray-200">
         <div className="relative h-64 w-full overflow-hidden">
@@ -237,11 +296,29 @@ function ProductCard({ id, title, price, cover_Image, discreption, stock }) {
               <span className="text-white text-sm font-bold bg-red-600 px-3 py-1 rounded-md">Sold Out</span>
             </div>
           )}
-          <img
-            src={imgSrc}
-            alt={title}
-            className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-110"
-          />
+          
+          {/* Image Container */}
+          <div className="relative h-full w-full">
+            {allImages.map((imageSrc, index) => (
+              <img
+                key={index}
+                src={imageSrc}
+                alt={`${title} - Image ${index + 1}`}
+                className={`absolute inset-0 h-full w-full object-cover object-center transition-all duration-500 ${
+                  isHovering && allImages.length > 1
+                    ? index === currentImageIndex 
+                      ? 'opacity-100 scale-110' 
+                      : 'opacity-0 scale-100'
+                    : index === 0 
+                      ? 'opacity-100 scale-100' 
+                      : 'opacity-0 scale-100'
+                }`}
+              />
+            ))}
+          </div>
+          
+
+          
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <button 
