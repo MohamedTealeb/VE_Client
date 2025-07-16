@@ -19,6 +19,14 @@ export default function Product_Det() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [showNote, setShowNote] = useState(true);
+
+  useEffect(() => {
+    if (showNote) {
+      const timer = setTimeout(() => setShowNote(false), 60000); // دقيقة
+      return () => clearTimeout(timer);
+    }
+  }, [showNote]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -149,6 +157,39 @@ export default function Product_Det() {
       <Navbar />
       <main className="bg-custom-background py-4 sm:py-8 lg:py-12 min-h-screen">
         <div className="container mx-auto px-3 sm:px-4 lg:px-6">
+          {/* ملاحظة الغسيل خارج الكارد */}
+          {showNote ? (
+            <div
+              className="max-w-lg mx-auto mb-6 flex items-start gap-4 bg-yellow-100 border-2 border-yellow-400 text-yellow-900 p-4 rounded-2xl text-lg shadow-lg animate-fade-in"
+              style={{ direction: 'rtl', textAlign: 'right' }}
+            >
+              <span className="mt-1">
+                <svg className="w-7 h-7 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01" />
+                </svg>
+              </span>
+              <div>
+                <span className="font-bold">ملحوظة:</span>
+                <ul className="list-disc pr-4 mt-2 space-y-2">
+                  <li>يغسل في ماء بارد</li>
+                  <li>لا يكوي إلا على ظهره</li>
+                  <li>عدم تعرضه للشمس للتجفيف</li>
+                  <li>غسل الألوان مع الألوان المشابهة فقط</li>
+                  <li>يفضل غسل الأسود بمسحوق خاص</li>
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <div className="max-w-4xl mx-auto mb-4 flex justify-end">
+              <button
+                className="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-2 px-4 rounded-lg shadow transition"
+                onClick={() => setShowNote(true)}
+              >
+                عرض الملاحظة
+              </button>
+            </div>
+          )}
           <div className="max-w-4xl mx-auto rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl p-4 sm:p-6 lg:p-8 flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8 bg-white/70 backdrop-blur-md border border-gray-200">
             {/* Product Image */}
             <div className="flex-1 flex flex-col items-center">
