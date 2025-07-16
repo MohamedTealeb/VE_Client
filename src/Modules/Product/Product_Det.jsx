@@ -23,7 +23,7 @@ export default function Product_Det() {
 
   useEffect(() => {
     if (showNote) {
-      const timer = setTimeout(() => setShowNote(false), 60000); // دقيقة
+      const timer = setTimeout(() => setShowNote(false), 6000); // 6 ثواني
       return () => clearTimeout(timer);
     }
   }, [showNote]);
@@ -157,39 +157,7 @@ export default function Product_Det() {
       <Navbar />
       <main className="bg-custom-background py-4 sm:py-8 lg:py-12 min-h-screen">
         <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-          {/* ملاحظة الغسيل خارج الكارد */}
-          {showNote ? (
-            <div
-              className="max-w-lg mx-auto mb-6 flex items-start gap-4 bg-yellow-100 border-2 border-yellow-400 text-yellow-900 p-4 rounded-2xl text-lg shadow-lg animate-fade-in"
-              style={{ direction: 'rtl', textAlign: 'right' }}
-            >
-              <span className="mt-1">
-                <svg className="w-7 h-7 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" strokeWidth="2" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01" />
-                </svg>
-              </span>
-              <div>
-                <span className="font-bold">ملحوظة:</span>
-                <ul className="list-disc pr-4 mt-2 space-y-2">
-                  <li>يغسل في ماء بارد</li>
-                  <li>لا يكوي إلا على ظهره</li>
-                  <li>عدم تعرضه للشمس للتجفيف</li>
-                  <li>غسل الألوان مع الألوان المشابهة فقط</li>
-                  <li>يفضل غسل الأسود بمسحوق خاص</li>
-                </ul>
-              </div>
-            </div>
-          ) : (
-            <div className="max-w-4xl mx-auto mb-4 flex justify-end">
-              <button
-                className="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-2 px-4 rounded-lg shadow transition"
-                onClick={() => setShowNote(true)}
-              >
-                عرض الملاحظة
-              </button>
-            </div>
-          )}
+      
           <div className="max-w-4xl mx-auto rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl p-4 sm:p-6 lg:p-8 flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8 bg-white/70 backdrop-blur-md border border-gray-200">
             {/* Product Image */}
             <div className="flex-1 flex flex-col items-center">
@@ -359,24 +327,41 @@ export default function Product_Det() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-7 sm:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                 Order Now
               </button>
-              {/* رسالة تحذيرية محسنة */}
-              <div
-                className="mt-4 sm:mt-6 flex items-start gap-2 sm:gap-3 bg-yellow-50 border-l-4 sm:border-l-8 border-yellow-400 text-yellow-900 p-3 sm:p-4 rounded-lg sm:rounded-xl text-sm sm:text-base shadow"
-                style={{ direction: 'rtl', textAlign: 'right' }}
-              >
-                <span className="mt-0.5 sm:mt-1">
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" strokeWidth="2" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01" />
-                  </svg>
-                </span>
-                <div>
-                  <span className="font-bold">ملحوظة:</span>
-                  <span className="ml-1">
-                    في حالة الاستبدال أو الاسترجاع يتم دفع مصاريف الشحن
-                  </span>
+                  {/* ملاحظة موحدة بالعرض */}
+          <div className="max-w-4xl mx-auto mt-8 flex justify-center">
+            {showNote ? (
+              <div className="w-full bg-yellow-100 border-2 border-yellow-400 text-yellow-900 p-4 rounded-2xl text-base md:text-lg shadow-lg animate-fade-in" style={{ direction: 'rtl', textAlign: 'right' }}>
+                <div className="w-full text-center mb-4">
+                  <span className="font-bold text-lg md:text-xl">ملحوظة:</span>
+                </div>
+                <div className="flex flex-row items-stretch">
+                  <div className="flex-1 flex flex-col justify-center">
+                    <span className="font-bold text-base md:text-lg mb-2 block">سياسة الغسيل</span>
+                    <ul className="list-disc pr-4 mt-2 space-y-1 text-sm md:text-base">
+                      <li>يغسل في ماء بارد</li>
+                      <li>لا يكوي إلا على ظهره</li>
+                      <li>عدم تعرضه للشمس للتجفيف</li>
+                      <li>غسل الألوان مع الألوان المشابهة فقط</li>
+                      <li>يفضل غسل الأسود بمسحوق خاص</li>
+                    </ul>
+                  </div>
+                  <div className="w-px bg-yellow-400 mx-6" style={{ minHeight: '60px' }}></div>
+                  <div className="flex-1 flex flex-col items-center justify-center">
+                    <span className="font-bold text-base md:text-lg mb-2 block">سياسة الاستبدال والاسترجاع</span>
+                    <span className="text-sm md:text-base">في حالة الاستبدال أو الاسترجاع يتم دفع مصاريف الشحن</span>
+                  </div>
                 </div>
               </div>
+            ) : (
+              <button
+                className="bg-yellow-100 border-2 border-yellow-400 text-yellow-900 px-6 py-3 rounded-2xl text-base md:text-lg shadow-lg hover:bg-yellow-200 transition font-bold"
+                onClick={() => setShowNote(true)}
+              >
+                عرض الملاحظات
+              </button>
+            )}
+          </div>
+          {/* نهاية الملاحظة الموحدة */}
             </div>
           </div>
           {/* Related Products inside the same card */}
