@@ -6,6 +6,7 @@ import { getProductById } from '../../Apis/Product_Api/Product';
 import toast from 'react-hot-toast';
 import { addToCart } from '../../Apis/cart/cart';
 import { getAllProducts } from '../../Apis/Product_Api/Product';
+import sizeGuideImg from '../../assets/WhatsApp Image 2025-05-10 at 23.43.31_0f57f908.jpg';
 
 export default function Product_Det() {
   const [searchParams] = useSearchParams();
@@ -20,6 +21,10 @@ export default function Product_Det() {
   const navigate = useNavigate();
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [showNote, setShowNote] = useState(true);
+  const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const [userWidth, setUserWidth] = useState('');
+  const [userHeight, setUserHeight] = useState('');
+  const [suggestedSize, setSuggestedSize] = useState('');
 
   useEffect(() => {
     if (showNote) {
@@ -127,6 +132,29 @@ export default function Product_Det() {
       navigate('/cart');
     } catch (err) {
       toast.error('Failed to add to cart');
+    }
+  };
+
+  const handleSuggestSize = () => {
+    // جدول المقاسات
+    const sizeTable = [
+      { size: 'S', width: 56, height: 70 },
+      { size: 'M', width: 58, height: 72 },
+      { size: 'L', width: 60, height: 74 },
+      { size: 'XL', width: 62, height: 76 },
+    ];
+    const w = parseInt(userWidth);
+    const h = parseInt(userHeight);
+    if (isNaN(w) || isNaN(h)) {
+      setSuggestedSize('برجاء إدخال أرقام صحيحة للطول والعرض');
+      return;
+    }
+    // ابحث عن أول مقاس أكبر أو يساوي القيم المدخلة
+    const found = sizeTable.find(row => w <= row.width && h <= row.height);
+    if (found) {
+      setSuggestedSize(`مقاسك المناسب هو: ${found.size}`);
+    } else {
+      setSuggestedSize('لا يوجد مقاس مناسب بناءً على القيم المدخلة');
     }
   };
 
@@ -318,7 +346,52 @@ export default function Product_Det() {
                       <span className="text-gray-400 text-sm">N/A</span>
                     )}
                   </div>
+                  {/* زر دليل المقاسات */}
+                  <button
+                    type="button"
+                    className="ml-4 mt-2 sm:mt-0 px-3 py-1 bg-gray-200 hover:bg-blue-100 text-gray-700 rounded-md text-xs sm:text-sm font-semibold flex items-center gap-1 border border-gray-300 shadow-sm transition"
+                    onClick={() => setShowSizeGuide(true)}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 20h16M4 4h16M4 8h16M4 12h16M4 16h16" /></svg>
+                    دليل المقاسات
+                  </button>
                 </div>
+                {/* نافذة دليل المقاسات */}
+                {showSizeGuide && (
+                  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-white rounded-2xl shadow-2xl p-7 max-w-md w-full relative animate-fade-in-up">
+                      <button
+                        className="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-2xl font-bold transition"
+                        onClick={() => setShowSizeGuide(false)}
+                        aria-label="إغلاق"
+                      >
+                        &times;
+                      </button>
+                      {/* أيقونة علوية */}
+                      <div className="flex justify-center mb-2">
+                        <svg className="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 7l8-4 8 4M4 7v10a2 2 0 002 2h12a2 2 0 002-2V7M4 7l8 5 8-5" /></svg>
+                      </div>
+                      <h2 className="text-2xl font-extrabold mb-1 text-center text-gray-800 tracking-tight">اعرف مقاسك المناسب</h2>
+                      <div className="text-gray-500 text-center text-sm mb-5">أدخل قياسات جسمك بالسنتيمتر وسنقترح عليك المقاس الأنسب لك</div>
+                      <div className="flex flex-col gap-3 mb-2">
+                        <label className="text-sm font-semibold text-gray-700">عرض جسمك (سم)</label>
+                        <input type="number" min="1" className="border rounded-full px-4 py-2 shadow focus:ring-2 focus:ring-blue-300 transition w-full text-center text-lg" value={userWidth} onChange={e => setUserWidth(e.target.value)} placeholder="مثال: 55" />
+                        <label className="text-sm font-semibold text-gray-700 mt-1">طول جسمك (سم)</label>
+                        <input type="number" min="1" className="border rounded-full px-4 py-2 shadow focus:ring-2 focus:ring-blue-300 transition w-full text-center text-lg" value={userHeight} onChange={e => setUserHeight(e.target.value)} placeholder="مثال: 71" />
+                        <button className="mt-4 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full shadow-lg transition text-lg" onClick={handleSuggestSize}>اعرف مقاسك</button>
+                        {suggestedSize && (
+                          <div className="mt-4 flex justify-center">
+                            <div className={`rounded-xl px-4 py-3 text-center font-bold text-lg shadow-md transition-all ${suggestedSize.includes('مقاسك المناسب هو') ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>{suggestedSize}</div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="mt-6 text-center">
+                        <span className="text-xs text-gray-400 mr-1">للمزيد من التفاصيل والصور عن المقاسات:</span>
+                        <a href="/size-guide" className="text-blue-600 hover:underline text-sm font-bold">صفحة دليل المقاسات الكاملة</a>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
               <button
                 onClick={handleOrder}

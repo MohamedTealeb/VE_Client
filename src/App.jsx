@@ -12,7 +12,7 @@ import { Toaster } from "react-hot-toast";
 import About from "./Modules/About/About";
 
 import Product_Det from "./Modules/Product/Product_Det";
-
+import SizeGuide from "./Modules/Product/SizeGuide";
 
 
 function App() {
@@ -41,6 +41,7 @@ function App() {
           <Route path="/about" element={<About />} />
         
           <Route path="/category" element={<Category />} />
+          <Route path="/size-guide" element={<SizeGuide />} />
 
           {/* Protected Cart Route */}
           <Route
