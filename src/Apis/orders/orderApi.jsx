@@ -78,3 +78,23 @@ export const deleteOrder = async (id) => {
   );
   return response.data;
 };
+
+// Get messages from API
+export const getMessages = async () => {
+  const token = localStorage.getItem('token');
+  console.log('Get messages API call:', {
+    url: `${import.meta.env.VITE_BASEURL}/messages`,
+    token: token ? 'Present' : 'Missing'
+  });
+  
+  const response = await axios.get(
+    `${import.meta.env.VITE_BASEURL}/messages`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  return response.data;
+};

@@ -13,6 +13,7 @@ import About from "./Modules/About/About";
 
 import Product_Det from "./Modules/Product/Product_Det";
 import SizeGuide from "./Modules/Product/SizeGuide";
+import Offers from "./Modules/Offers/Offers";
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
         
           <Route path="/category" element={<Category />} />
           <Route path="/size-guide" element={<SizeGuide />} />
+          <Route path="/offers" element={<Offers />} />
 
           {/* Protected Cart Route */}
           <Route

@@ -102,10 +102,18 @@ export default function Product_Det() {
     if (product) fetchRelated();
   }, [product]);
 
-  const handleIncrement = () => setQuantity((prev) => prev + 1);
+  const handleIncrement = () => {
+    if (product.stock > 0 && quantity < product.stock) {
+      setQuantity((prev) => prev + 1);
+    }
+  };
   const handleDecrement = () => setQuantity((prev) => Math.max(1, prev - 1));
 
   const handleOrder = async () => {
+    if (product.stock === 0) {
+      toast.error('This product is out of stock!');
+      return;
+    }
     if (!selectedColor) {
       setError("Please select a color.");
       return;
@@ -190,11 +198,35 @@ export default function Product_Det() {
             {/* Product Image */}
             <div className="flex-1 flex flex-col items-center">
               <div className="relative w-full max-w-sm sm:max-w-md lg:w-96 mb-4 transition-transform duration-300 hover:scale-105 drop-shadow-xl">
-                {product.stock === 0 && (
-                  <div className="absolute top-2 left-2 z-10">
-                    <span className="text-white text-xs sm:text-sm font-bold bg-red-600 px-2 sm:px-3 py-1 rounded-md">Sold Out</span>
+                {/* Stock Progress Bar */}
+                <div className="absolute top-2 left-2 right-2 z-10">
+                  <div className="bg-black bg-opacity-50 backdrop-blur-sm rounded-lg p-2">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-white text-xs font-semibold">
+                        {product.stock === 0 ? 'Out of Stock' : `${product.stock} items left`}
+                      </span>
+                      <span className="text-white text-xs">
+                        {product.stock === 0 ? '0%' : `${Math.round((product.stock / Math.max(product.stock, 10)) * 100)}%`}
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-700 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full transition-all duration-300 ${
+                          product.stock === 0 
+                            ? 'bg-red-500 w-0' 
+                            : product.stock <= 5 
+                              ? 'bg-orange-500' 
+                              : 'bg-green-500'
+                        }`}
+                        style={{ 
+                          width: product.stock === 0 
+                            ? '0%' 
+                            : `${Math.min((product.stock / Math.max(product.stock, 10)) * 100, 100)}%` 
+                        }}
+                      ></div>
+                    </div>
                   </div>
-                )}
+                </div>
                 <img
                   className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-xl sm:rounded-2xl shadow-lg"
                   src={`${import.meta.env.VITE_IMAGEURL}${selectedImage || product.cover_Image}`}
@@ -237,15 +269,27 @@ export default function Product_Det() {
                 <div className="mb-4 sm:mb-6 flex items-center gap-3 sm:gap-4">
                   <span className="font-semibold text-gray-700 text-sm sm:text-base">Quantity:</span>
                   <button
-                    className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-gray-200 text-lg sm:text-2xl font-bold hover:bg-blue-100 transition-colors shadow"
+                    className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-lg sm:text-2xl font-bold transition-colors shadow ${
+                      product.stock === 0 
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                        : 'bg-gray-200 hover:bg-blue-100'
+                    }`}
                     onClick={handleDecrement}
+                    disabled={product.stock === 0}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" /></svg>
                   </button>
-                  <span className="px-3 sm:px-4 text-base sm:text-lg font-bold">{quantity}</span>
+                  <span className={`px-3 sm:px-4 text-base sm:text-lg font-bold ${
+                    product.stock === 0 ? 'text-gray-400' : ''
+                  }`}>{quantity}</span>
                   <button
-                    className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-gray-200 text-lg sm:text-2xl font-bold hover:bg-blue-100 transition-colors shadow"
+                    className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-lg sm:text-2xl font-bold transition-colors shadow ${
+                      product.stock === 0 || quantity >= product.stock
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                        : 'bg-gray-200 hover:bg-blue-100'
+                    }`}
                     onClick={handleIncrement}
+                    disabled={product.stock === 0 || quantity >= product.stock}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
                   </button>
@@ -395,10 +439,28 @@ export default function Product_Det() {
               </div>
               <button
                 onClick={handleOrder}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-lg sm:text-xl font-bold shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer mt-4"
+                disabled={product.stock === 0}
+                className={`w-full flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-lg sm:text-xl font-bold shadow-xl transition-all duration-300 cursor-pointer mt-4 ${
+                  product.stock === 0 
+                    ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                    : 'bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-white hover:scale-105'
+                }`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-7 sm:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                Order Now
+                {product.stock === 0 ? (
+                  <>
+                    <svg className="h-5 w-5 sm:h-7 sm:w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Out of Stock
+                  </>
+                ) : (
+                  <>
+                    <svg className="h-5 w-5 sm:h-7 sm:w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Order Now
+                  </>
+                )}
               </button>
                   {/* ملاحظة موحدة بالعرض */}
           <div className="max-w-4xl mx-auto mt-8 flex justify-center">

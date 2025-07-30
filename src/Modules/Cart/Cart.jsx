@@ -3,7 +3,7 @@ import Navbar from '../../Component/Shared/Navbar';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { getCartItems, removeFromCart } from '../../Apis/cart/cart';
-import { createOrder, getGovernments, getMyOrders, deleteOrder, updateOrderStatus } from '../../Apis/orders/orderApi';
+import { createOrder, getGovernments, getMyOrders, deleteOrder, updateOrderStatus, getMessages } from '../../Apis/orders/orderApi';
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -20,6 +20,8 @@ export default function Cart() {
   const [showOrders, setShowOrders] = useState(false);
   const [showDeleteOrderDialog, setShowDeleteOrderDialog] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState(null);
+  const [showOffer, setShowOffer] = useState(false);
+  const [offerData, setOfferData] = useState(null);
 
   useEffect(() => {
     fetchCart();
@@ -94,8 +96,9 @@ export default function Cart() {
 
   const handleDeleteOrder = async (id) => {
     try {
-      console.log('Attempting to delete order with ID:', id);
-      const response = await deleteOrder(id);
+      const numericId = Number(id); // تأكد أن الـ id رقم
+      console.log('Attempting to delete order with ID:', numericId);
+      const response = await deleteOrder(numericId);
       console.log('Delete response:', response);
       
       setOrders((prev) => prev.filter((order) => (order.id || order._id) !== id));
@@ -204,9 +207,34 @@ export default function Cart() {
       // تفريغ الكارت بعد إنشاء الطلب
       setCartItems([]);
       
-      // تحميل الطلبات وعرضها
+            // تحميل الطلبات وعرضها
       await fetchOrders();
       setShowOrders(true);
+      
+      // جلب الرسائل وعرضها كـ div من أعلى الشاشة
+      try {
+        const messagesResponse = await getMessages();
+        const messagesData = Array.isArray(messagesResponse) ? messagesResponse : messagesResponse.data || [];
+        
+        if (messagesData.length > 0) {
+          const messageData = messagesData[0];
+          setOfferData({
+            productName: messageData.product?.name || 'Unknown Product',
+            productPrice: messageData.product?.price || 0,
+            productImage: messageData.product?.cover_Image || ''
+          });
+          setShowOffer(true);
+          
+          // إخفاء العرض بعد دقيقة
+          setTimeout(() => {
+            setShowOffer(false);
+            setOfferData(null);
+          }, 60000);
+        }
+      } catch (messagesError) {
+        console.error('Failed to load messages:', messagesError);
+        // لا نعرض خطأ للمستخدم إذا فشل جلب الرسائل
+      }
       
       console.log('Order created:', response);
       
@@ -290,7 +318,25 @@ export default function Cart() {
                             <div className="flex items-center gap-4 mb-2">
                               <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zm0 0V4m0 4v4m0 0h4m-4 0H8" /></svg>
                               <span className="font-semibold text-gray-700">Price:</span>
-                              <span className="text-xl text-blue-700 font-bold">{item.product?.price ? `LE ${item.product?.price} EGP` : '--'}</span>
+                              {item.offerId ? (
+                                <div className="flex items-center gap-2">
+                                  <span className="text-lg text-gray-400 line-through">
+                                    LE {item.product?.price || 0} EGP
+                                  </span>
+                                  <span className="text-xl text-green-700 font-bold">
+                                    LE {item.discountedPrice || item.price || item.product?.price || 0} EGP
+                                  </span>
+                                  {item.discount && (
+                                    <span className="text-sm text-red-600 font-semibold">
+                                      ({item.discount}% OFF)
+                                    </span>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="text-xl text-blue-700 font-bold">
+                                  {item.product?.price ? `LE ${item.product?.price} EGP` : '--'}
+                                </span>
+                              )}
                             </div>
                             <div className="flex items-center gap-4 mb-2">
                               <svg className="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 9V7a5 5 0 0110 0v2" /></svg>
@@ -300,7 +346,15 @@ export default function Cart() {
                             <div className="flex items-center gap-4 mb-2">
                               <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zm0 0V4m0 4v4m0 0h4m-4 0H8" /></svg>
                               <span className="font-semibold text-gray-700">Total (Including Shipping):</span>
-                              <span className="text-xl text-green-700 font-bold">{item.product?.price ? `LE ${item.product?.price * item.quantity + 70} EGP` : '--'}</span>
+                              {item.offerId ? (
+                                <span className="text-xl text-green-700 font-bold">
+                                  LE {((item.discountedPrice || item.price || item.product?.price || 0) * item.quantity + 70)} EGP
+                                </span>
+                              ) : (
+                                <span className="text-xl text-green-700 font-bold">
+                                  {item.product?.price ? `LE ${item.product?.price * item.quantity + 70} EGP` : '--'}
+                                </span>
+                              )}
                             </div>
                             <div className="flex items-center gap-4 mb-2 text-xs text-gray-500">
                               <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
@@ -407,7 +461,7 @@ export default function Cart() {
                         <div className="flex gap-8 mt-10 justify-center">
                           <button
                             type="button"
-                            className="px-10 py-4 rounded-full bg-gradient-to-r from-gray-200 to-gray-400 text-gray-700 font-bold text-xl hover:from-gray-300 hover:to-gray-500 transition-all flex items-center gap-2 shadow-lg border-2 border-gray-300"
+                            className="px-10 py-4 rounded-full bg-gray-200 to-gray-400 text-gray-700 font-bold text-xl hover:from-gray-300 hover:to-gray-500 transition-all flex items-center gap-2 shadow-lg border-2 border-gray-300"
                             onClick={() => setShowCheckout(false)}
                           >
                             <span className="text-2xl">❌</span> Cancel
@@ -428,7 +482,7 @@ export default function Cart() {
             
             {/* زر Show Orders عندما يكون الكارت فارغ */}
             {!loading && cartItems.length === 0 && (
-              <div className="flex justify-center mt-8">
+              <div className="flex justify-center gap-4 mt-8">
                 <button
                   className="w-full max-w-md py-4 bg-blue-600 text-white rounded-xl font-bold text-xl hover:bg-blue-700 transition-colors shadow"
                   onClick={async () => {
@@ -440,7 +494,7 @@ export default function Cart() {
                 >
                   Show Orders
                 </button>
-                </div>
+              </div>
             )}
             
                 {/* Delete Confirmation Dialog */}
@@ -615,10 +669,50 @@ export default function Cart() {
               >
                 Try Delete
               </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
       )}
+
+      {/* عرض العرض الخاص */}
+      {showOffer && offerData && (
+        <div 
+          className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 ease-out animate-pulse"
+          style={{
+            background: offerData.productImage 
+              ? `url("${import.meta.env.VITE_IMAGEURL}${offerData.productImage}")`
+              : 'linear-gradient(135deg, #3b82f6 0%, #9333ea 100%)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            color: '#fff',
+            padding: '20px',
+            borderRadius: '12px',
+            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
+            border: '2px solid #3b82f6',
+            maxWidth: '400px',
+            minWidth: '350px',
+            minHeight: '200px'
+          }}
+        >
+          <div className="text-center">
+            <div className="text-2xl font-bold mb-3 animate-bounce">🔥 SPECIAL OFFER 🔥</div>
+            <div className="text-xl font-bold mb-3 text-yellow-300">
+              {offerData.productName}
+            </div>
+            <div className="text-lg font-bold mb-4 text-yellow-100">
+              🎉 LIMITED TIME DEAL! 🎉
+            </div>
+            <button 
+              onClick={() => navigate('/offers')}
+              className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-6 rounded-lg transition-colors duration-200 shadow-lg"
+            >
+              View Offers
+            </button>
+          </div>
+        </div>
+      )}
+
+
   </>
   );
 }

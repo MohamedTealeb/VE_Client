@@ -1,11 +1,15 @@
 import axios from 'axios';
 
 // Add item to cart or increase quantity if it already exists
-export const addToCart = async ({ productId, quantity, colorId, sizeId }) => {
+export const addToCart = async ({ productId, quantity, colorId, sizeId, offerId }) => {
   const token = localStorage.getItem('token');
+  const body = { productId, quantity };
+  if (colorId) body.colorId = colorId;
+  if (sizeId) body.sizeId = sizeId;
+  if (typeof offerId !== 'undefined') body.offerId = offerId;
   const response = await axios.post(
     `${import.meta.env.VITE_BASEURL}/cart`,
-    { productId, quantity, colorId, sizeId },
+    body,
     {
       headers: {
         Authorization: `Bearer ${token}`,
